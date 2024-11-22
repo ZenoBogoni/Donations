@@ -1,0 +1,33 @@
+<div id="app">
+  <nav class="navbar navbar-default">
+      <ul class="nav navbar-nav">
+        <li>
+          <a class="navbar-brand" href="/">{{ title }}</a>
+        </li>
+        <li>
+          <a routerLink="">Home</a>
+        </li>
+        <li>
+          <a routerLink="/survey">Survey</a>
+        </li>
+        <li>
+          <a routerLink="/creator">Survey Creator</a>
+        </li>
+        <li>
+          <a routerLink="/pdfexport">PDF Export</a>
+        </li>
+        <li>
+          <a routerLink="/analytics">Analytics</a>
+        </li>
+        <li>
+          <a routerLink="/analyticstabulator">Results Table</a>
+        </li>
+        <li>
+          <a routerLink="/analyticsdatatables">Results Table (IE Support)</a>
+        </li>
+      </ul>
+  </nav>
+  <div class="app-content">
+    <router-outlet ></router-outlet>
+  </div>
+</div>
