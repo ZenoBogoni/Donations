@@ -3,8 +3,8 @@
   <ng-container *ngIf="group === 1">
     <ng-container *ngIf="step === 1">
       <h2>What's others've donated</h2>
-      <survey-analytics-tabulator [surveyJson]="json" [results]="data"></survey-analytics-tabulator>
-      <button (click)="step = step + 1">Next</button>
+      <survey-analytics-tabulator *ngIf="data && json" [surveyJson]="json" [results]="data"></survey-analytics-tabulator>
+      <button class="sd-btn sd-navigation__next-btn" (click)="step = step + 1">Start this f*cking survey</button>
     </ng-container>
     <ng-container *ngIf="step === 2">
       <survey-container [json]="json" (submitSurvey)="sendData($event)"></survey-container>

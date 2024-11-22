@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 import { json } from "../data/survey";
-import { data } from "../data/analytics";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "survey-page",
@@ -14,9 +14,15 @@ export class SurveyPage {
   group;
   step = 1;
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.json = json;
-    this.data = data;
+    this.http.get("https://donationsexperiment-default-rtdb.europe-west1.firebasedatabase.app/.json").subscribe((data: any) => {
+      this.data = [];
+      if (data[this.machineCode]) {
+        // completed survey
+      }
+      Object.values(data).forEach(e => this.data.push(...Object.values(e)));
+    });
     if (!this.machineCode) {
       this.machineCode = this.generateMachineCode();
       localStorage.setItem("machineCode", this.machineCode);
@@ -31,5 +37,8 @@ export class SurveyPage {
 
   sendData(result) {
     console.log(result);
+    this.http.post(
+      `https://donationsexperiment-default-rtdb.europe-west1.firebasedatabase.app/${this.machineCode}.json`, result).subscribe(() => {
+    });
   }
 }
