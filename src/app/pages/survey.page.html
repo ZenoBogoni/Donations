@@ -1,4 +1,20 @@
 <div class="container">
-  <h1>SurveyJS Library / Runner</h1>
-  <survey-container [json]="json" (submitSurvey)="sendData($event)"></survey-container>
+
+  <ng-container *ngIf="group === 1">
+    <ng-container *ngIf="step === 1">
+      <h2>What's others've donated</h2>
+      <survey-analytics-tabulator [surveyJson]="json" [results]="data"></survey-analytics-tabulator>
+      <button (click)="step = step + 1">Next</button>
+    </ng-container>
+    <ng-container *ngIf="step === 2">
+      <survey-container [json]="json" (submitSurvey)="sendData($event)"></survey-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="group === 0">
+    <survey-container [json]="json" (submitSurvey)="sendData($event)"></survey-container>
+  </ng-container>
+
+
+
 </div>
