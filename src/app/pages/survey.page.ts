@@ -90,8 +90,10 @@ export class SurveyPage {
       Object.values(data).forEach((e) => this.data.push(...Object.values(e)));
       this.compressedData = this.surveyService.getCompressedData(this.data);
 
-      // Genera un grafico a linea con ECharts.
-      this.generateEChart();
+      if (this.group === 1) {
+        // Genera un grafico a linea con ECharts.
+        this.generateEChart();
+      }
 
       // Salva i progressi nel localStorage quando i valori cambiano.
       this.model.onValueChanged.add(this.onAnswerChanged.bind(this));
@@ -172,9 +174,9 @@ export class SurveyPage {
     const myChart = echarts.init(chartDom);
     myChart.setOption({
       textStyle: {
-      color: 'white'
+        color: "white",
       },
-      color: ['orange']
+      color: ["orange"],
     });
     const option = {
       tooltip: {
@@ -182,12 +184,14 @@ export class SurveyPage {
       },
       xAxis: {
         type: "category",
-        data: this.compressedData.sort((a, b) => b.time < a.time ? 1 : -1).map((item) => item.time),
+        data: this.compressedData
+          .sort((a, b) => (b.time < a.time ? 1 : -1))
+          .map((item) => item.time),
         axisLabel: {
           formatter: function (value, idx) {
             const date = new Date(value);
-            return date.toLocaleString("it-IT")
-          }
+            return date.toLocaleString("it-IT");
+          },
         },
       },
       yAxis: {
@@ -195,19 +199,21 @@ export class SurveyPage {
         axisLabel: {
           formatter: function (value, idx) {
             return value + " €";
-          }
+          },
         },
         splitLine: {
-          show: false
-        }
+          show: false,
+        },
       },
       series: [
         {
-          data: this.compressedData.sort((a, b) => b.time < a.time ? 1 : -1).map((item) => item.donation_amount),
+          data: this.compressedData
+            .sort((a, b) => (b.time < a.time ? 1 : -1))
+            .map((item) => item.donation_amount),
           type: "line",
           markLine: {
-            data: [{ type: 'average', name: 'Avg' }]
-          }
+            data: [{ type: "average", name: "Avg" }],
+          },
         },
       ],
     };
