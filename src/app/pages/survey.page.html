@@ -3,7 +3,18 @@
   <ng-container *ngIf="group === 1">
     <ng-container *ngIf="step === 1">
       <h2>What's others've donated</h2>
-      <survey-analytics-tabulator *ngIf="data && json" [surveyJson]="json" [results]="data"></survey-analytics-tabulator>
+      <table class="sd-table">
+        <tr>
+          <th>Donation</th>
+          <th>Amount</th>
+          <th>Time</th>
+        </tr>
+        <tr *ngFor="let donation of compressedData" style="border-bottom: 1px solid #ddd">
+          <td>{{ donation.first_name || 'Anonymous donator' }} {{ donation.last_name }}</td>
+          <td>{{ donation.donation_amount || 0 }} €</td>
+          <td>{{ donation.time | date: 'dd/MM/yyyy HH:mm'}}</td>
+        </tr>
+      </table>
       <button class="sd-btn sd-navigation__next-btn" (click)="step = step + 1">Start this f*cking survey</button>
     </ng-container>
     <ng-container *ngIf="step === 2">
