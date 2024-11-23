@@ -1,4 +1,4 @@
-h1,h1+span{margin:0;padding:16px}body{margin:0;font-family:Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif}.container{max-width:1170px;margin:auto}.container__row{display:flex}.col-lg-3{flex-basis:25%}.col-lg-9{flex-basis:75%}.jumbotron{background-color:#f3f3f3;padding:16px}.jumbotron p{font-size:21px;font-weight:200}.jumbotron ul{font-size:21px;list-style-type:none;padding:0;display:flex;flex-direction:column;gap:16px}/*!
+h1,h1+span{margin:0;padding:16px}body{margin:0;font-family:Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif}body{background:#000;color:#fff}.container{max-width:1170px;margin:auto}.container__row{display:flex}.col-lg-3{flex-basis:25%}.col-lg-9{flex-basis:75%}.jumbotron{background-color:#f3f3f3;padding:16px}.jumbotron p{font-size:21px;font-weight:200}.jumbotron ul{font-size:21px;list-style-type:none;padding:0;display:flex;flex-direction:column;gap:16px}/*!
  * surveyjs - Survey JavaScript library v1.12.11
  * Copyright (c) 2015-2024 Devsoft Baltic OÜ  - http://surveyjs.io/
  * License: MIT (http://www.opensource.org/licenses/mit-license.php)
