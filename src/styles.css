@@ -15,6 +15,10 @@ body {
   color: #fff;
 }
 
+.sa-commercial {
+  display: none !important;
+}
+
 .container {
   max-width: 1170px;
   margin: auto;

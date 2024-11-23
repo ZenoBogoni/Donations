@@ -1,6 +1,7 @@
 import { Component, Input, EventEmitter, Output, OnInit } from "@angular/core";
 import { Model } from "survey-core";
 import { VisualizationPanel } from "survey-analytics";
+declare var SurveyTheme: any;
 
 @Component({
   selector: "survey-analytics",
@@ -14,6 +15,8 @@ export class SurveyAnalyticsComponent implements OnInit {
   @Output() surveySaved: EventEmitter<Object> = new EventEmitter();
   ngOnInit() {
     const survey = new Model(this.surveyJson);
+
+    survey.applyTheme(SurveyTheme.ContrastDark);
 
     const visPanel = new VisualizationPanel(
       survey.getAllQuestions(),

@@ -13,7 +13,6 @@ import { SurveyAnalyticsDatatablesComponent } from "./components/survey.analytic
 
 import { AnalyticsPage } from "./pages/analytics.page";
 import { AnalyticsTabulatorPage } from "./pages/analytics.tabulator.page";
-import { AnalyticsDatatablesPage } from "./pages/analytics.datatables.page";
 
 import { PdfExportPage } from "./pages/pdfexport.page";
 import { SurveyModule } from "survey-angular-ui";
@@ -30,7 +29,6 @@ import { SurveyCreatorModule } from "survey-creator-angular";
     AnalyticsPage,
     PdfExportPage,
     AnalyticsTabulatorPage,
-    AnalyticsDatatablesPage,
   ],
   imports: [BrowserModule, HttpClientModule, AppRoutingModule, SurveyModule, SurveyCreatorModule],
   providers: [],
