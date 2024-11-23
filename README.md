@@ -5,6 +5,7 @@ Welcome to the Donations repository for Fida. This project aims to study donatio
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [Demo](#demo)
 - [Experiment Design](#experiment-design)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -14,6 +15,10 @@ Welcome to the Donations repository for Fida. This project aims to study donatio
 ## Introduction
 
 This project is designed to help researchers study how different treatments affect donation behaviors.
+
+## Demo
+
+Live demo is available at [https://vincenzomanto.github.io/Donations/](https://vincenzomanto.github.io/Donations/)
 
 ## Experiment Design
 
