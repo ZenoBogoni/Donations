@@ -1,8 +1,22 @@
-<div class="container">
+
+
+<div class="container sd-root-modern">
 
   <ng-container *ngIf="group === 1">
     <ng-container *ngIf="step === 1">
-      <h2>What's others've donated</h2>
+      <div class="sd-container-modern__title sd-title">
+        <div class="sd-header__text">
+          <h3 class="sd-title" aria-label="Esperimento sul comportamento nelle donazioni">
+            <span class="sv-string-viewer">Esperimento sul comportamento nelle donazioni</span>
+          </h3>
+          <div class="sd-description">
+            <span class="sv-string-viewer sv-string-viewer--multiline">Studio sull'impatto del riconoscimento sociale sulle donazioni.</span>
+          </div>
+          <h2 style="text-align: center;">What others've donated</h2>
+        </div>
+        <div class="sd-hidden"></div>
+      </div>
+          <div id="chart"></div>
       <table class="sd-table">
         <tr>
           <th>Donation</th>

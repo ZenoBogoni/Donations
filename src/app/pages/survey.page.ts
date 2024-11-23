@@ -8,11 +8,14 @@ import _ from "lodash";
 import { json } from "../data/survey2";
 import { HttpClient } from "@angular/common/http";
 import { Model } from "survey-core";
+import { SurveyService } from "./survey.service";
+declare var echarts: any;
+declare var SurveyTheme: any;
 
 @Component({
   selector: "survey-page",
   templateUrl: "./survey.page.html",
-  styles: ["td { padding: 0.5rem; text-align: center; }"],
+  styleUrls: ["./survey.page.css"],
 })
 export class SurveyPage {
   /**
@@ -63,9 +66,13 @@ export class SurveyPage {
    * Costruttore del componente.
    * @param {HttpClient} http - Servizio HttpClient per le richieste HTTP.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    protected surveyService: SurveyService
+  ) {
     this.json = json;
     this.model = new Model(this.json);
+    this.model.applyTheme(SurveyTheme.ContrastDark);
     this.model.cookieName = this.machineCode;
     this.model.showPrevButton = false;
 
@@ -73,7 +80,7 @@ export class SurveyPage {
     this.model.onCurrentPageChanged.add(this.onPageChanged.bind(this));
 
     // Effettua una richiesta HTTP per ottenere i dati.
-    this.http.get(this.getUrl("")).subscribe((data: any) => {
+    this.http.get(SurveyService.getUrl("")).subscribe((data: any) => {
       this.data = [];
 
       // Riavvia il sondaggio dal punto in cui è stato interrotto.
@@ -81,7 +88,10 @@ export class SurveyPage {
 
       // Unisce e linearizza i dati ricevuti dal server.
       Object.values(data).forEach((e) => this.data.push(...Object.values(e)));
-      this.compressedData = this.getCompressedData();
+      this.compressedData = this.surveyService.getCompressedData(this.data);
+
+      // Genera un grafico a linea con ECharts.
+      this.generateEChart();
 
       // Salva i progressi nel localStorage quando i valori cambiano.
       this.model.onValueChanged.add(this.onAnswerChanged.bind(this));
@@ -92,7 +102,7 @@ export class SurveyPage {
 
     // Genera un nuovo codice macchina se non esiste.
     if (!this.machineCode) {
-      this.machineCode = this.generateMachineCode();
+      this.machineCode = SurveyService.generateMachineCode();
       localStorage.setItem("machineCode", this.machineCode);
     }
 
@@ -110,7 +120,9 @@ export class SurveyPage {
   onCompleted(sender: Model) {
     const payload = sender.getData();
     payload.time = new Date().toISOString();
-    this.http.post(this.getUrl(this.machineCode), payload).subscribe(() => {});
+    this.http
+      .post(SurveyService.getUrl(this.machineCode), payload)
+      .subscribe(() => {});
   }
 
   /**
@@ -149,49 +161,57 @@ export class SurveyPage {
     }
   }
 
-  /**
-   * Genera un codice macchina casuale.
-   * @returns {string} Codice macchina generato.
-   */
-  generateMachineCode() {
-    const append = Math.random() > 0.5 ? "1" : "0";
-    return append + Math.random().toString(36).substring(2, 15);
-  }
-
-  /**
-   * Ottiene i dati compressi per la visualizzazione.
-   * @returns {any[] | null} Dati compressi.
-   */
-  getCompressedData() {
-    if (!this.data) {
-      return null;
+  generateEChart() {
+    // Genera un grafico a linea con ECharts evidenziando l'evoluzione delle donazioni.
+    // Utilizza i dati compressi per visualizzazione.
+    if (!this.compressedData) {
+      return;
     }
-    const columns = [
-      "donation_motivation",
-      "donation_amount",
-      "first_name",
-      "last_name",
-      "time",
-    ];
-    const data = this.data.map((e) => {
-      const obj: any = {};
 
-      Object.keys(e).forEach((key) => {
-        if (columns.includes(key)) {
-          obj[key] = e[key];
-        }
-      });
-      return obj;
+    const chartDom = document.getElementById("chart") as HTMLElement;
+    const myChart = echarts.init(chartDom);
+    myChart.setOption({
+      textStyle: {
+      color: 'white'
+      },
+      color: ['orange']
     });
-    return data.sort((a, b) => (b.time > a.time ? 1 : -1));
-  }
+    const option = {
+      tooltip: {
+        trigger: "axis",
+      },
+      xAxis: {
+        type: "category",
+        data: this.compressedData.sort((a, b) => b.time < a.time ? 1 : -1).map((item) => item.time),
+        axisLabel: {
+          formatter: function (value, idx) {
+            const date = new Date(value);
+            return date.toLocaleString("it-IT")
+          }
+        },
+      },
+      yAxis: {
+        type: "value",
+        axisLabel: {
+          formatter: function (value, idx) {
+            return value + " €";
+          }
+        },
+        splitLine: {
+          show: false
+        }
+      },
+      series: [
+        {
+          data: this.compressedData.sort((a, b) => b.time < a.time ? 1 : -1).map((item) => item.donation_amount),
+          type: "line",
+          markLine: {
+            data: [{ type: 'average', name: 'Avg' }]
+          }
+        },
+      ],
+    };
 
-  /**
-   * Costruisce l'URL per le richieste HTTP.
-   * @param {string} obj - Oggetto da aggiungere all'URL.
-   * @returns {string} URL costruito.
-   */
-  getUrl(obj: string) {
-    return `https://donationsexperiment-default-rtdb.europe-west1.firebasedatabase.app/${obj}.json`;
+    myChart.setOption(option);
   }
 }
