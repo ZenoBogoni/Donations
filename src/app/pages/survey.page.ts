@@ -3,21 +3,22 @@
  * @module SurveyPage
  */
 
-import { Component } from "@angular/core";
+import { AfterViewInit, Component } from "@angular/core";
 import _ from "lodash";
 import { json } from "../data/survey2";
 import { HttpClient } from "@angular/common/http";
 import { Model } from "survey-core";
 import { SurveyService } from "./survey.service";
 declare var echarts: any;
+declare var MultiRange: any;
 declare var SurveyTheme: any;
 
 @Component({
   selector: "survey-page",
   templateUrl: "./survey.page.html",
-  styleUrls: ["./survey.page.css"],
+  styleUrls: ["./survey.page.scss"],
 })
-export class SurveyPage {
+export class SurveyPage implements AfterViewInit {
   /**
    * JSON del sondaggio.
    * @type {any}
@@ -82,6 +83,7 @@ export class SurveyPage {
     // Effettua una richiesta HTTP per ottenere i dati.
     this.http.get(SurveyService.getUrl("")).subscribe((data: any) => {
       this.data = [];
+      data = data || {};
 
       // Riavvia il sondaggio dal punto in cui è stato interrotto.
       this.restartWhereLeft(data);
@@ -90,10 +92,11 @@ export class SurveyPage {
       Object.values(data).forEach((e) => this.data.push(...Object.values(e)));
       this.compressedData = this.surveyService.getCompressedData(this.data);
 
-      if (this.group === 1) {
+      // Deprecato: Genera un grafico a linea con ECharts.
+      /* if (this.group === 1) {
         // Genera un grafico a linea con ECharts.
         this.generateEChart();
-      }
+      } */
 
       // Salva i progressi nel localStorage quando i valori cambiano.
       this.model.onValueChanged.add(this.onAnswerChanged.bind(this));
@@ -125,7 +128,10 @@ export class SurveyPage {
     this.http
       .post(SurveyService.getUrl(this.machineCode), payload)
       .subscribe(() => {});
-  }
+      if (this.group === 1) {
+        this.step = 2;
+      }
+    }
 
   /**
    * Salva i progressi nel localStorage quando i valori cambiano.
@@ -151,7 +157,7 @@ export class SurveyPage {
    * Riavvia il sondaggio dal punto in cui è stato interrotto.
    * @param data - Dati ricevuti dal server.
    */
-  restartWhereLeft(data: any) {
+  restartWhereLeft(data: any = {}) {
     if (data[this.machineCode]) {
       this.step = 2;
       this.model.doComplete();
@@ -163,6 +169,9 @@ export class SurveyPage {
     }
   }
 
+  /**
+   * @deprecated
+   */
   generateEChart() {
     // Genera un grafico a linea con ECharts evidenziando l'evoluzione delle donazioni.
     // Utilizza i dati compressi per visualizzazione.
@@ -219,5 +228,76 @@ export class SurveyPage {
     };
 
     myChart.setOption(option);
+  }
+
+  ngAfterViewInit() {
+    /**
+     * Inizializza il widget MultiRange.
+     * Inoltre, ricrea i range se sono già stati inseriti.
+     * Salva anche i valori dei range nel modello SurveyJS.
+     */
+    const loop = setInterval(() => {
+      let node: any = document.evaluate(
+        "//div[contains(@class, 'sd-element') and contains(., '{{multiRange}}')]",
+        document.body,
+        null,
+        XPathResult.FIRST_ORDERED_NODE_TYPE,
+        null
+      ).singleNodeValue;
+      if (!node) {
+        return;
+      }
+      node.innerHTML =
+        `${node.innerHTML.replace("{{multiRange}}", '')}<div class="multiRange" style="width: 100%;"></div>`;
+      node = node.querySelector(".multiRange");
+
+      // salvo i valori di default nel caso qualcuno skippasse
+      // TODO: è skippabile?
+      this.model.setValue("budget_distribution", {
+        housing: 12.5,
+        food: 12.5,
+        healthcare: 12.5,
+        transportation: 12.5,
+        entertainment: 12.5,
+        savings: 12.5,
+        donations: 12.5,
+        other: 12.5,
+      });
+
+      const recreateRanges: any = Object.values(this.model.getValue("budget_distribution") || {});
+      if (recreateRanges) {
+        for (let i = 1; i < recreateRanges.length; i++) {
+          recreateRanges[i] += recreateRanges[i - 1];
+        }
+      }
+
+      const categories = ['Housing', 'Food', 'Healthcare', 'Transportation', 'Entertainment', 'Savings', 'Donations', 'Other'];
+
+      const m = new MultiRange(node, {
+        names: categories,
+        ranges: recreateRanges?.length ? recreateRanges?.slice(1) : [12.5, 25, 37.5, 50, 62.5, 75, 87.5, 99.999],
+        step: 0,
+      });
+      m.on("changed", (e) => {
+        // rimappo i valori in un oggetto
+        const ranges = _.cloneDeep(e.detail.ranges);
+        const obj = {};
+        for (let i = ranges.length - 1; i > 0; i--) {
+          ranges[i] -= ranges[i - 1];
+          ranges[i] = Math.round(ranges[i] * 1000) / 1000;
+        }
+        categories.forEach((category, i) => {
+          obj[category.toLowerCase()] = ranges[i + 1];
+        });
+
+        // valorizzo il modello
+        this.model.setValue("budget_distribution", obj);
+
+        // salvo i progressi
+        this.onAnswerChanged(this.model);
+      });
+      clearInterval(loop);
+    }, 1000);
+
   }
 }

@@ -1,176 +1,258 @@
+
+
 export const json = {
-  "title": "Esperimento sul comportamento nelle donazioni",
-  "description": "Studio sull'impatto del riconoscimento sociale sulle donazioni.",
-  "logoPosition": "right",
-  "completedHtml": "<h3>Grazie per aver partecipato all'esperimento!</h3>",
-  "pages": [
+  title: "Experiment on Financial Behavior and Anonymity",
+  description: "A study on how anonymity influences financial decision-making.",
+  logoPosition: "right",
+  completedHtml: "<h3>Thank you for participating in this experiment!</h3>",
+  pages: [
     {
-      "name": "intro",
-      "elements": [
+      name: "intro",
+      elements: [
         {
-          "type": "html",
-          "name": "introduction",
-          "html": "<p>In questo esperimento, esploreremo come diversi contesti influenzano il comportamento nelle donazioni. Rispondi con sincerità: non ci sono risposte giuste o sbagliate.</p>"
-        }
-      ]
+          type: "html",
+          name: "introduction",
+          html: "<p>In this experiment, we aim to understand how different contexts affect financial decision-making. Please respond honestly; there are no right or wrong answers.</p>",
+        },
+      ],
     },
     {
-      "name": "donation_anonymous",
-      "visibleIf": "{experiment_group} = 'anonimo'",
-      "elements": [
+      name: "group_info",
+      title: "How your data will be used",
+      elements: [
         {
-          "type": "html",
-          "name": "anonymous_info",
-          "html": "<p>Sei nel gruppo anonimo. La tua donazione sarà completamente riservata e non sarà possibile associarla alla tua identità.</p>"
+          type: "html",
+          name: "group_notification",
+          visibleIf: "{experiment_group} = 'anonimo'",
+          html: "<p>The information you provide will be kept anonymous and confidential. Your responses will be used for research purposes only in aggregated manner.</p>",
         },
         {
-          "type": "text",
-          "name": "donation_amount",
-          "title": "Quanto desideri donare? (Importo in euro)",
-          "inputType": "number",
-          "isRequired": true,
-          "validators": [
-            { "type": "numeric", "minValue": 0, "maxValue": 1000 }
-          ]
-        }
-      ]
+          type: "html",
+          name: "group_notification",
+          visibleIf: "{experiment_group} = 'non_anonimo'",
+          html: "<p>The information you provide will be kept confidential and will only be used for research purposes. <div class='alert alert-danger'>You will share only your <b>name, surname and your budget distribution</b> (marked question)</div> Your responses will not be shared with any third parties.</p>",
+        },
+      ],
     },
     {
-      "name": "donation_non_anonymous",
-      "visibleIf": "{experiment_group} = 'non_anonimo'",
-      "elements": [
+      name: "demographics",
+      elements: [
         {
-          "type": "html",
-          "name": "non_anonymous_info",
-          "html": "<p>Sei nel gruppo non anonimo. La tua donazione sarà visibile agli altri partecipanti e associata al tuo nome.</p>"
-        },
-        {
-          "type": "text",
-          "name": "donation_amount",
-          "title": "Quanto desideri donare? (Importo in euro)",
-          "inputType": "number",
-          "isRequired": true,
-          "validators": [
-            { "type": "numeric", "minValue": 0, "maxValue": 1000 }
-          ]
-        },
-        {
-          "type": "text",
-          "name": "first_name",
-          "title": "Inserisci il tuo nome",
-          "isRequired": true
-        },
-        {
-          "type": "text",
-          "name": "last_name",
-          "title": "Inserisci il tuo cognome",
-          "isRequired": true
-        }
-      ]
-    },
-    {
-      "name": "propensity_questions",
-      "elements": [
-        {
-          "type": "matrix",
-          "name": "donation_motivation",
-          "title": "Indica quanto sei d'accordo con le seguenti affermazioni relative alla donazione.",
-          "columns": [
-            { "value": 1, "text": "Per niente d'accordo" },
-            { "value": 2, "text": "Poco d'accordo" },
-            { "value": 3, "text": "Neutrale" },
-            { "value": 4, "text": "Abbastanza d'accordo" },
-            { "value": 5, "text": "Totalmente d'accordo" }
+          type: "dropdown",
+          name: "age_group",
+          title: "Select your age group:",
+          isRequired: true,
+          choices: [
+            { value: "18_25", text: "18-25" },
+            { value: "26_35", text: "26-35" },
+            { value: "36_45", text: "36-45" },
+            { value: "46_60", text: "46-60" },
+            { value: "60_plus", text: "Over 60" },
           ],
-          "rows": [
-            { "value": "help_others", "text": "Donare mi permette di aiutare gli altri." },
-            { "value": "social_recognition", "text": "Donare mi fa sentire apprezzato dagli altri." },
-            { "value": "personal_principles", "text": "Donare è in linea con i miei principi personali." },
-            { "value": "moral_duty", "text": "Mi sento moralmente obbligato a donare." }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "social_stigma",
-      "elements": [
+        },
         {
-          "type": "matrix",
-          "name": "social_pressure",
-          "title": "Quanto ritieni che le seguenti situazioni influenzino la tua scelta di donare?",
-          "columns": [
-            { "value": 1, "text": "Per niente" },
-            { "value": 2, "text": "Poco" },
-            { "value": 3, "text": "Moderatamente" },
-            { "value": 4, "text": "Molto" },
-            { "value": 5, "text": "Completamente" }
+          type: "radiogroup",
+          name: 'gender',
+          title: "What is your gender?",
+          isRequired: true,
+          choices: [
+            { value: "male", text: "Male" },
+            { value: "female", text: "Female" },
+            { value: "prefer_not_to_say", text: "Prefer not to say" },
           ],
-          "rows": [
-            { "value": "being_watched", "text": "Essere osservato da altri mentre decido." },
-            { "value": "public_announcement", "text": "Sapere che la mia donazione sarà resa pubblica." },
-            { "value": "group_expectations", "text": "Le aspettative del gruppo di cui faccio parte." },
-            { "value": "fear_of_judgment", "text": "La paura di essere giudicato se non dono." }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "demographics",
-      "elements": [
-        {
-          "type": "dropdown",
-          "name": "age_group",
-          "title": "Seleziona la tua fascia d'età",
-          "isRequired": true,
-          "choices": [
-            { "value": "18_25", "text": "18-25" },
-            { "value": "26_35", "text": "26-35" },
-            { "value": "36_45", "text": "36-45" },
-            { "value": "46_60", "text": "46-60" },
-            { "value": "60_plus", "text": "Oltre 60" }
-          ]
         },
         {
-          "type": "dropdown",
-          "name": "education",
-          "title": "Qual è il tuo livello di istruzione?",
-          "isRequired": true,
-          "choices": [
-            { "value": "no_degree", "text": "Nessun titolo di studio" },
-            { "value": "high_school", "text": "Diploma di scuola superiore" },
-            { "value": "bachelor", "text": "Laurea triennale" },
-            { "value": "master", "text": "Laurea magistrale" },
-            { "value": "doctorate", "text": "Dottorato" }
-          ]
+          type: "dropdown",
+          name: "education",
+          title: "What is your highest level of education?",
+          isRequired: true,
+          choices: [
+            { value: "no_degree", text: "No degree" },
+            { value: "high_school", text: "High School Diploma" },
+            { value: "bachelor", text: "Bachelor's Degree" },
+            { value: "master", text: "Master's Degree" },
+            { value: "doctorate", text: "Doctorate" },
+          ],
         },
         {
-          "type": "radiogroup",
-          "name": "income_level",
-          "title": "Qual è il tuo livello di reddito mensile netto?",
-          "isRequired": true,
-          "choices": [
-            { "value": "low", "text": "Meno di 1000€" },
-            { "value": "medium", "text": "Tra 1000€ e 3000€" },
-            { "value": "high", "text": "Oltre 3000€" }
-          ]
+          type: "dropdown",
+          name: "employment_status",
+          title: "What is your current employment status?",
+          isRequired: true,
+          choices: [
+            { value: "unemployed", text: "Unemployed" },
+            { value: "student", text: "Student" },
+            { value: "employed", text: "Employed" },
+            { value: "retired", text: "Retired" },
+          ],
         }
-      ]
+      ],
     },
     {
-      "name": "feedback",
-      "elements": [
+      name: "personal_finance_questions",
+      elements: [
         {
-          "type": "comment",
-          "name": "participant_feedback",
-          "title": "Hai qualche commento o riflessione da condividere?"
-        }
+          type: "matrix",
+          name: "financial_priorities",
+          title:
+            "Please indicate how important the following financial goals are to you:",
+          columns: [
+            { value: 1, text: "Not important" },
+            { value: 2, text: "Slightly important" },
+            { value: 3, text: "Neutral" },
+            { value: 4, text: "Important" },
+            { value: 5, text: "Very important" },
+          ],
+          rows: [
+            { value: "saving", text: "Saving for the future" },
+            { value: "paying_bills", text: "Paying monthly bills" },
+            { value: "entertainment", text: "Entertainment and leisure" },
+            { value: "education", text: "Education or self-improvement" },
+            {
+              value: "donations",
+              text: "Making donations or charitable contributions",
+            },
+            { value: "investing", text: "Investing in assets or stocks" },
+          ],
+        },
+        {
+          type: "radiogroup",
+          name: "financial_control",
+          title: "How do you typically manage your personal finances?",
+          choices: [
+            { value: "manual", text: "Manually (e.g., cash or spreadsheets)" },
+            { value: "apps", text: "Using apps or financial tools" },
+            {
+              value: "no_control",
+              text: "I don't actively manage my finances",
+            },
+          ],
+        },
+        {
+          type: "matrix",
+          name: "spending_frequency",
+          title: "How often do you allocate funds to the following categories?",
+          columns: [
+            { value: 1, text: "Never" },
+            { value: 2, text: "Yearly" },
+            { value: 3, text: "Quarterly" },
+            { value: 4, text: "Monthly" },
+            { value: 5, text: "Weekly" },
+            { value: 6, text: "Daily" },
+          ],
+          rows: [
+            { value: "housing", text: "Housing or rent" },
+            { value: "food", text: "Food and groceries" },
+            { value: "health", text: "Healthcare" },
+            { value: "transportation", text: "Transportation" },
+            { value: "entertainment", text: "Entertainment" },
+            { value: "saving", text: "Saving" },
+            { value: "donations", text: "Donations" },
+          ],
+        },
+        {
+          type: "text",
+          name: "monthly_income",
+          title: "What is your approximate monthly income?",
+          inputType: "number",
+          isRequired: true,
+          validators: [{ type: "numeric", minValue: 0 }],
+        },
+
+      ],
+    },
+    {
+      name: "budget_allocation",
+      title: "Budget Allocation",
+      elements: [
+        {
+          type: "html",
+          name: "budget_allocation_intro",
+          visibleIf: "{experiment_group} = 'non_anonimo'",
+          html: "<div class='alert alert-danger'>Shared result!</div>",
+        },
+        {
+          type: "matrix",
+          name: "budget_distribution",
+          isRequired: true,
+          title:
+            "Imagine you have {fullWage}€ (twice your monthly income) to allocate for a month. How would you distribute it among the following categories? (Enter percentages that sum to 100%) {{multiRange}}",
+        },
       ]
-    }
+    },
+
+    {
+      name: "habits",
+      title: "Habits and Preferences",
+      elements: [
+        {
+          type: "boolean",
+          name: "smoking",
+          title: "Do you smoke?",
+        },
+        {
+          type: "text",
+          name: "smoking_expense",
+          title: "If yes, how much do you spend on smoking per month?",
+          visibleIf: "{smoking} = true",
+          inputType: "number",
+          validators: [{ type: "numeric", minValue: 0 }],
+        },
+        {
+          type: "boolean",
+          name: "alcohol",
+          title: "Do you consume alcohol?",
+        },
+        {
+          type: "text",
+          name: "smoking_expense",
+          title: "If yes, how much do you spend on alcohol per month?",
+          visibleIf: "{alcohol} = true",
+          inputType: "number",
+          validators: [{ type: "numeric", minValue: 0 }],
+        },
+        {
+          type: "boolean",
+          name: "hobby_spending",
+          title: "Do you have a specific spending hobby that accounts for more than 10% of your income?",
+        },
+      ],
+    },
+    {
+      name: "non_anonymous_info",
+      title: "Personal Information",
+      visibleIf: "{experiment_group} = 'non_anonimo'",
+      elements: [
+        {
+          type: "html",
+          name: "budget_allocation_intro",
+          visibleIf: "{experiment_group} = 'non_anonimo'",
+          html: "<div class='alert alert-danger'>Shared result!</div>",
+        },
+        {
+          type: "text",
+          name: "name",
+          title: "Please enter your first name:",
+          isRequired: true,
+        },
+        {
+          type: "text",
+          name: "surname",
+          title: "Please enter your last name:",
+          isRequired: true,
+        },
+      ],
+    },
+
   ],
-  "showProgressBar": "top",
-  "progressBarType": "questions",
-  "goNextPageAutomatic": false,
-  "showQuestionNumbers": "on",
-  "questionTitleLocation": "top",
-  "sendResultOnPageNext": true
+  "calculatedValues": [{
+    "name": "fullWage",
+    "expression": "{monthly_income} * 2"
+  }],
+  showProgressBar: "top",
+  progressBarType: "questions",
+  goNextPageAutomatic: false,
+  showQuestionNumbers: "on",
+  questionTitleLocation: "top",
+  sendResultOnPageNext: true,
 };

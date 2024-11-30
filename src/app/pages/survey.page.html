@@ -3,35 +3,44 @@
 <div class="container">
 
   <ng-container *ngIf="group === 1">
-    <ng-container *ngIf="step === 1">
+    <ng-container *ngIf="step === 2">
       <div class="sd-container-modern__title sd-title">
         <div class="sd-header__text">
-          <h3 class="sd-title" aria-label="Esperimento sul comportamento nelle donazioni">
-            <span class="sv-string-viewer">Esperimento sul comportamento nelle donazioni</span>
+          <h3 class="sd-title">
+            <span class="sv-string-viewer">{{json['title']}}</span>
           </h3>
           <div class="sd-description">
-            <span class="sv-string-viewer sv-string-viewer--multiline">Studio sull'impatto del riconoscimento sociale sulle donazioni.</span>
+            <span class="sv-string-viewer sv-string-viewer--multiline">{{json['description']}}</span>
           </div>
-          <h2 style="text-align: center;">What others've donated</h2>
+          <h2 style="text-align: center;">
+            Public results
+          </h2>
         </div>
         <div class="sd-hidden"></div>
       </div>
-          <div id="chart"></div>
-      <table class="sd-table">
+      <!-- <div id="chart"></div> -->
+      <table class="sd-table mt-2">
         <tr>
-          <th>Donation</th>
+          <th></th>
           <th>Amount</th>
           <th>Time</th>
         </tr>
-        <tr *ngFor="let donation of compressedData" style="border-bottom: 1px solid #ddd">
-          <td>{{ donation.first_name || 'Anonymous donator' }} {{ donation.last_name }}</td>
-          <td>{{ donation.donation_amount || 0 }} €</td>
+        <tr *ngFor="let donation of compressedData">
+          <td>{{ donation.name || 'Anonymous donator' }} {{ donation.surname }}</td>
+          <td>
+            <div class="row">
+              <div class="col-auto budget-col" *ngFor="let category of donation.budget_distribution | keyvalue">
+                <div class="sd-progress-bar" [style.height]="category.value + '%'">
+                </div>
+              </div>
+            </div>
+          </td>
           <td>{{ donation.time | date: 'dd/MM/yyyy HH:mm'}}</td>
         </tr>
       </table>
-      <button class="sd-btn sd-navigation__next-btn" (click)="step = step + 1">Start this f*cking survey</button>
+      <button class="sd-btn sd-navigation__next-btn" (click)="step = step + 1">Start the survey</button>
     </ng-container>
-    <ng-container *ngIf="step === 2">
+    <ng-container *ngIf="step === 1">
       <survey [model]="model" (submitSurvey)="sendData($event)"></survey>
     </ng-container>
   </ng-container>

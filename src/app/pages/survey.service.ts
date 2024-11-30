@@ -33,9 +33,9 @@ export class SurveyService {
     }
     const columns = [
       "donation_motivation",
-      "donation_amount",
-      "first_name",
-      "last_name",
+      "budget_distribution",
+      "name",
+      "surname",
       "time",
     ];
     const data = baseData.map((e) => {
