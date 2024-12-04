@@ -9,8 +9,10 @@ import { json } from "../data/survey2";
 import { HttpClient } from "@angular/common/http";
 import { Model } from "survey-core";
 import { SurveyService } from "./survey.service";
+import { ActivatedRoute } from "@angular/router";
 declare var echarts: any;
 declare var MultiRange: any;
+declare var DraggablePiechart: any;
 declare var SurveyTheme: any;
 
 @Component({
@@ -69,8 +71,16 @@ export class SurveyPage implements AfterViewInit {
    */
   constructor(
     private http: HttpClient,
-    protected surveyService: SurveyService
+    protected surveyService: SurveyService,
+    private activated: ActivatedRoute
   ) {
+    this.activated.queryParams.subscribe((params) => {
+      if (params["force"]) {
+        localStorage.removeItem("progress");
+        localStorage.removeItem("currentPage");
+        localStorage.removeItem("machineCode");
+      }
+    });
     this.json = json;
     this.model = new Model(this.json);
     this.model.applyTheme(SurveyTheme.ContrastDark);
@@ -128,10 +138,10 @@ export class SurveyPage implements AfterViewInit {
     this.http
       .post(SurveyService.getUrl(this.machineCode), payload)
       .subscribe(() => {});
-      if (this.group === 1) {
-        this.step = 2;
-      }
+    if (this.group === 1) {
+      this.step = 2;
     }
+  }
 
   /**
    * Salva i progressi nel localStorage quando i valori cambiano.
@@ -247,8 +257,96 @@ export class SurveyPage implements AfterViewInit {
       if (!node) {
         return;
       }
-      node.innerHTML =
-        `${node.innerHTML.replace("{{multiRange}}", '')}<div class="multiRange" style="width: 100%;"></div>`;
+
+      const colors = [
+        "#17deee",
+        "#ff7f50",
+        "#ff4162",
+        "#ecf284",
+        "#10aeb2",
+        "#0078ff",
+        "#00d86f",
+        "#fff",
+      ]
+
+      const categories = [
+        "Housing",
+        "Food",
+        "Healthcare",
+        "Transportation",
+        "Entertainment",
+        "Savings",
+        "Donations",
+        "Other",
+      ];
+
+      node.innerHTML = `${node.innerHTML.replace(
+        "{{multiRange}}",
+        ""
+      )}<div class="container-range"><div class="multiRange" style="width: 100%;"></div>
+        <h3>Or you can use the following sliders:</h3>
+        <canvas id="piechart" width="300" height="300">
+          Your browser is too old!
+        </canvas>
+            <table id="proportions-table"></table></div>
+        `;
+      const data = categories.map((category, i) => ({
+        proportion: 0.125,
+        label: category.toLowerCase(),
+        format: {
+          color: colors[i],
+          label: category,
+        },
+        collapsed: false,
+      }));
+
+      const onPieChartChange = (piechart) => {
+        const table = document.getElementById("proportions-table");
+        const percentages = piechart.getAllSliceSizePercentages();
+
+        this.setValuesInModel(categories, percentages);
+
+        let labelsRow = "<tr>";
+        let propsRow = "<tr>";
+        for (let i = 0; i < data.length; i += 1) {
+          labelsRow += `<th>${data[i].format.label}</th>`;
+
+          const v = `<var>${percentages[i].toFixed(0)}%</var>`;
+          const plus =
+            `<div id="plu-${categories[i]}" class="adjust-button" data-i="${i}" data-d="-1">&#43;</div>`;
+          const minus =
+            `<div id="min-${categories[i]}" class="adjust-button" data-i="${i}" data-d="1">&#8722;</div>`;
+          propsRow += `<td>${v}${plus}${minus}</td>`;
+        }
+        labelsRow += "</tr>";
+        propsRow += "</tr>";
+
+        table.innerHTML = labelsRow + propsRow;
+
+        const adjust = document.getElementsByClassName("adjust-button");
+
+        function adjustClick(e) {
+          const i = this.getAttribute("data-i");
+          const d = this.getAttribute("data-d");
+
+          piechart.moveAngle(i, d * 0.1);
+        }
+
+        for (let i = 0; i < adjust.length; i++) {
+          adjust[i].addEventListener("click", adjustClick);
+        }
+      }
+
+      const pie = new DraggablePiechart({
+        canvas: document.getElementById("piechart"),
+        radius: 0.9,
+        collapsing: true,
+        proportions: data,
+        onchange: onPieChartChange,
+      });
+
+
+
       node = node.querySelector(".multiRange");
 
       // salvo i valori di default nel caso qualcuno skippasse
@@ -264,40 +362,52 @@ export class SurveyPage implements AfterViewInit {
         other: 12.5,
       });
 
-      const recreateRanges: any = Object.values(this.model.getValue("budget_distribution") || {});
+      const recreateRanges: any = Object.values(
+        this.model.getValue("budget_distribution") || {}
+      );
       if (recreateRanges) {
         for (let i = 1; i < recreateRanges.length; i++) {
           recreateRanges[i] += recreateRanges[i - 1];
         }
       }
 
-      const categories = ['Housing', 'Food', 'Healthcare', 'Transportation', 'Entertainment', 'Savings', 'Donations', 'Other'];
-
       const m = new MultiRange(node, {
         names: categories,
-        ranges: recreateRanges?.length ? recreateRanges?.slice(1) : [12.5, 25, 37.5, 50, 62.5, 75, 87.5, 99.999],
+        ranges: recreateRanges?.length
+          ? recreateRanges
+          : [12.5, 25, 37.5, 50, 62.5, 75, 87.5, 99.999],
         step: 0,
       });
       m.on("changed", (e) => {
         // rimappo i valori in un oggetto
         const ranges = _.cloneDeep(e.detail.ranges);
-        const obj = {};
         for (let i = ranges.length - 1; i > 0; i--) {
           ranges[i] -= ranges[i - 1];
           ranges[i] = Math.round(ranges[i] * 1000) / 1000;
         }
-        categories.forEach((category, i) => {
-          obj[category.toLowerCase()] = ranges[i + 1];
-        });
 
-        // valorizzo il modello
-        this.model.setValue("budget_distribution", obj);
-
-        // salvo i progressi
-        this.onAnswerChanged(this.model);
+        // setto i valori nel modello
+        this.setValuesInModel(categories, ranges);
       });
       clearInterval(loop);
     }, 1000);
+  }
 
+  /**
+   * Setta i valori nel modello.
+   * @param categories - Categorie.
+   * @param ranges - Range.
+   */
+  setValuesInModel(categories: string[], ranges: number[]) {
+    const obj = {};
+    categories.forEach((category, i) => {
+      obj[category.toLowerCase()] = ranges[i + 1];
+    });
+
+    // valorizzo il modello
+    this.model.setValue("budget_distribution", obj);
+
+    // salvo i progressi
+    this.onAnswerChanged(this.model);
   }
 }

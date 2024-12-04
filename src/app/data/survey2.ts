@@ -41,7 +41,7 @@ export const json = {
           type: "dropdown",
           name: "age_group",
           title: "Select your age group:",
-          isRequired: true,
+          isRequired: false,
           choices: [
             { value: "18_25", text: "18-25" },
             { value: "26_35", text: "26-35" },
@@ -54,7 +54,7 @@ export const json = {
           type: "radiogroup",
           name: 'gender',
           title: "What is your gender?",
-          isRequired: true,
+          isRequired: false,
           choices: [
             { value: "male", text: "Male" },
             { value: "female", text: "Female" },
@@ -65,7 +65,7 @@ export const json = {
           type: "dropdown",
           name: "education",
           title: "What is your highest level of education?",
-          isRequired: true,
+          isRequired: false,
           choices: [
             { value: "no_degree", text: "No degree" },
             { value: "high_school", text: "High School Diploma" },
@@ -78,7 +78,7 @@ export const json = {
           type: "dropdown",
           name: "employment_status",
           title: "What is your current employment status?",
-          isRequired: true,
+          isRequired: false,
           choices: [
             { value: "unemployed", text: "Unemployed" },
             { value: "student", text: "Student" },
@@ -176,7 +176,7 @@ export const json = {
           name: "budget_distribution",
           isRequired: true,
           title:
-            "Imagine you have {fullWage}€ (twice your monthly income) to allocate for a month. How would you distribute it among the following categories? (Enter percentages that sum to 100%) {{multiRange}}",
+            "Imagine you received 1000€ to allocate for a month. How would you distribute it among the following categories? (Enter percentages that sum to 100%) {{multiRange}}",
         },
       ]
     },
