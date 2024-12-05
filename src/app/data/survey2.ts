@@ -12,26 +12,32 @@ export const json = {
         {
           type: "html",
           name: "introduction",
-          html: "<p>In this experiment, we aim to understand how different contexts affect financial decision-making. Please respond honestly; there are no right or wrong answers.</p>",
+          html: `<p><h3>Introduction to this survey</h3>
+
+Thank you for your interest in participating in this study. This survey is part of an academic research project aimed at understanding financial allocation mechanisms and their impact on individual economic decision-making. Your participation is essential to the success of this research and will contribute to a deeper understanding of financial behavior in a social context.
+
+<h6>Privacy and data sharing</h6>
+Some of the information collected during this questionnaire <b>may be shared publicly</b> in aggregated, anonymous or personally identifiable form for research purposes. The results will be used solely for academic purposes and published in compliance with deontological ethics.
+
+<h6>Importance of your contribution</h6>
+Your input represents a valuable contribution to this study, helping us gather meaningful data that reflects diverse individual perspectives. Providing accurate and honest responses is crucial to ensuring the quality and reliability of the analyses derived from this research.
+
+<h6>Time commitment and details</h6>
+The survey will take approximately 5-10 minutes to complete. There are no right or wrong answers; we kindly ask you to respond based on your personal experiences and opinions.
+
+We sincerely thank you for your time and valuable contribution. Should you have any questions or require further information, please do not hesitate to contact us.</p>`,
         },
-      ],
-    },
-    {
-      name: "group_info",
-      title: "How your data will be used",
-      elements: [
         {
-          type: "html",
-          name: "group_notification",
-          visibleIf: "{experiment_group} = 'anonimo'",
-          html: "<p>The information you provide will be kept anonymous and confidential. Your responses will be used for research purposes only in aggregated manner.</p>",
-        },
-        {
-          type: "html",
-          name: "group_notification",
-          visibleIf: "{experiment_group} = 'non_anonimo'",
-          html: "<p>The information you provide will be kept confidential and will only be used for research purposes. <div class='alert alert-danger'>You will share only your <b>name, surname and your budget distribution</b> (marked question)</div> Your responses will not be shared with any third parties.</p>",
-        },
+          type: "checkbox",
+          name: "tos",
+          "choices": [
+            {
+             "value": "confirmed",
+             "text": "I confirm that I have read and understood the information provided above."
+            }],
+          title: "Please confirm that you have read and understood the information provided above.",
+          isRequired: true,
+        }
       ],
     },
     {
@@ -86,6 +92,49 @@ export const json = {
             { value: "retired", text: "Retired" },
           ],
         }
+      ],
+    },
+    {
+      name: "non_anonymous_info",
+      title: "Personal Information",
+      visibleIf: "{experiment_group} = 'non_anonimo'",
+      elements: [
+        {
+          type: "html",
+          name: "budget_allocation_intro",
+          visibleIf: "{experiment_group} = 'non_anonimo'",
+          html: "<div class='alert alert-danger'>Shared result!</div>",
+        },
+        {
+          type: "text",
+          name: "name",
+          title: "Please enter your first name:",
+          isRequired: true,
+        },
+        {
+          type: "text",
+          name: "surname",
+          title: "Please enter your last name:",
+          isRequired: true,
+        },
+      ],
+    },
+    {
+      name: "group_info",
+      title: "How your data will be used",
+      elements: [
+        {
+          type: "html",
+          name: "group_notification",
+          visibleIf: "{experiment_group} = 'anonimo'",
+          html: "<p>The information you provide will be kept anonymous and confidential. Your responses will be used for research purposes only in aggregated manner.</p>",
+        },
+        {
+          type: "html",
+          name: "group_notification",
+          visibleIf: "{experiment_group} = 'non_anonimo'",
+          html: "<p>The information you provide will be kept confidential and will only be used for research purposes. <div class='alert alert-danger'>You will share only your <b>name, surname and your budget distribution</b> (marked question)</div> Your responses will not be shared with any third parties.</p>",
+        },
       ],
     },
     {
@@ -176,7 +225,8 @@ export const json = {
           name: "budget_distribution",
           isRequired: true,
           title:
-            "Imagine you received 1000€ to allocate for a month. How would you distribute it among the following categories? (Enter percentages that sum to 100%) {{multiRange}}",
+            // tslint:disable-next-line:max-line-length
+            "Imagine you received 1000€ to allocate for a month. How would you distribute it among the following categories? {{multiRange}}",
         },
       ]
     },
@@ -217,32 +267,7 @@ export const json = {
           title: "Do you have a specific spending hobby that accounts for more than 10% of your income?",
         },
       ],
-    },
-    {
-      name: "non_anonymous_info",
-      title: "Personal Information",
-      visibleIf: "{experiment_group} = 'non_anonimo'",
-      elements: [
-        {
-          type: "html",
-          name: "budget_allocation_intro",
-          visibleIf: "{experiment_group} = 'non_anonimo'",
-          html: "<div class='alert alert-danger'>Shared result!</div>",
-        },
-        {
-          type: "text",
-          name: "name",
-          title: "Please enter your first name:",
-          isRequired: true,
-        },
-        {
-          type: "text",
-          name: "surname",
-          title: "Please enter your last name:",
-          isRequired: true,
-        },
-      ],
-    },
+    }
 
   ],
   "calculatedValues": [{
