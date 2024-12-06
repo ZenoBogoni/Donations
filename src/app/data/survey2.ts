@@ -1,5 +1,3 @@
-
-
 export const json = {
   title: "Experiment on Financial Behavior and Anonymity",
   description: "A study on how anonymity influences financial decision-making.",
@@ -30,14 +28,16 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         {
           type: "checkbox",
           name: "tos",
-          "choices": [
+          choices: [
             {
-             "value": "confirmed",
-             "text": "I confirm that I have read and understood the information provided above."
-            }],
-          title: "Please confirm that you have read and understood the information provided above.",
+              value: "confirmed",
+              text: "I confirm that I have read and understood the information provided above.",
+            },
+          ],
+          title:
+            "Please confirm that you have read and understood the information provided above.",
           isRequired: true,
-        }
+        },
       ],
     },
     {
@@ -58,7 +58,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         },
         {
           type: "radiogroup",
-          name: 'gender',
+          name: "gender",
           title: "What is your gender?",
           isRequired: false,
           choices: [
@@ -91,7 +91,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
             { value: "employed", text: "Employed" },
             { value: "retired", text: "Retired" },
           ],
-        }
+        },
       ],
     },
     {
@@ -207,7 +207,6 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           isRequired: true,
           validators: [{ type: "numeric", minValue: 0 }],
         },
-
       ],
     },
     {
@@ -228,13 +227,24 @@ We sincerely thank you for your time and valuable contribution. Should you have 
             // tslint:disable-next-line:max-line-length
             "Imagine you received 1000€ to allocate for a month. How would you distribute it among the following categories? {{multiRange}}",
         },
-      ]
+      ],
     },
 
     {
       name: "habits",
       title: "Habits and Preferences",
       elements: [
+        {
+          type: "boolean",
+          name: "volunteer",
+          title: "Have you ever done any volunteer activities?",
+        },
+        {
+          type: "boolean",
+          name: "willing_to_donate",
+          title:
+            "Would you be willing to give up a small part of your salary to help those in need?",
+        },
         {
           type: "boolean",
           name: "smoking",
@@ -264,16 +274,51 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         {
           type: "boolean",
           name: "hobby_spending",
-          title: "Do you have a specific spending hobby that accounts for more than 10% of your income?",
+          title:
+            "Do you have a specific spending hobby that accounts for more than 10% of your income?",
         },
       ],
-    }
-
+    },
+    {
+      name: "post_survey",
+      elements: [
+        {
+          type: "matrix",
+          name: "post_survey",
+          title: "How much you agree with these statements?",
+          isRequired: true,
+          columns: [
+            { value: 1, text: "Strongly disagree" },
+            { value: 2, text: "Disagree" },
+            { value: 3, text: "Neutral" },
+            { value: 4, text: "Agree" },
+            { value: 5, text: "Strongly agree" },
+          ],
+          rows: [
+            {
+              value: "privacy",
+              text: "I am concerned about my privacy when sharing personal information online.",
+            },
+            {
+              value: "financial_literacy",
+              text: "I feel confident in my financial literacy and knowledge.",
+            },
+            {
+              value: "future",
+              text: "I understood the meaning of the questionnaire.",
+            },
+            { value: "savings", text: "I felt judged for my responses." },
+          ],
+        },
+      ],
+    },
   ],
-  "calculatedValues": [{
-    "name": "fullWage",
-    "expression": "{monthly_income} * 2"
-  }],
+  calculatedValues: [
+    {
+      name: "fullWage",
+      expression: "{monthly_income} * 2",
+    },
+  ],
   showProgressBar: "top",
   progressBarType: "questions",
   goNextPageAutomatic: false,

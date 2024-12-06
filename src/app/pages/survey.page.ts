@@ -150,6 +150,9 @@ export class SurveyPage implements AfterViewInit {
   onAnswerChanged(sender: Model) {
     localStorage.setItem("progress", JSON.stringify(sender.getData()));
     localStorage.setItem("currentPage", JSON.stringify(sender.currentPageNo));
+    this.http
+      .post(SurveyService.getUrl(this.machineCode + '/lastPage'), sender.currentPageNo)
+      .subscribe(() => {});
   }
 
   /**
@@ -177,67 +180,6 @@ export class SurveyPage implements AfterViewInit {
         JSON.parse(localStorage.getItem("currentPage")) || 0;
       this.step = 2;
     }
-  }
-
-  /**
-   * @deprecated
-   */
-  generateEChart() {
-    // Genera un grafico a linea con ECharts evidenziando l'evoluzione delle donazioni.
-    // Utilizza i dati compressi per visualizzazione.
-    if (!this.compressedData) {
-      return;
-    }
-
-    const chartDom = document.getElementById("chart") as HTMLElement;
-    const myChart = echarts.init(chartDom);
-    myChart.setOption({
-      textStyle: {
-        color: "white",
-      },
-      color: ["orange"],
-    });
-    const option = {
-      tooltip: {
-        trigger: "axis",
-      },
-      xAxis: {
-        type: "category",
-        data: this.compressedData
-          .sort((a, b) => (b.time < a.time ? 1 : -1))
-          .map((item) => item.time),
-        axisLabel: {
-          formatter: function (value, idx) {
-            const date = new Date(value);
-            return date.toLocaleString("it-IT");
-          },
-        },
-      },
-      yAxis: {
-        type: "value",
-        axisLabel: {
-          formatter: function (value, idx) {
-            return value + " €";
-          },
-        },
-        splitLine: {
-          show: false,
-        },
-      },
-      series: [
-        {
-          data: this.compressedData
-            .sort((a, b) => (b.time < a.time ? 1 : -1))
-            .map((item) => item.donation_amount),
-          type: "line",
-          markLine: {
-            data: [{ type: "average", name: "Avg" }],
-          },
-        },
-      ],
-    };
-
-    myChart.setOption(option);
   }
 
   ngAfterViewInit() {
