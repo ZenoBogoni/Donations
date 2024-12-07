@@ -5,7 +5,7 @@
 
 import { AfterViewInit, Component } from "@angular/core";
 import _ from "lodash";
-import { json } from "../data/survey2";
+import { categories, colors, json } from "../data/survey2";
 import { HttpClient } from "@angular/common/http";
 import { Model } from "survey-core";
 import { SurveyService } from "./survey.service";
@@ -200,28 +200,6 @@ export class SurveyPage implements AfterViewInit {
         return;
       }
 
-      const colors = [
-        "#17deee",
-        "#ff7f50",
-        "#ff4162",
-        "#ecf284",
-        "#10aeb2",
-        "#0078ff",
-        "#00d86f",
-        "#fff",
-      ]
-
-      const categories = [
-        "Housing",
-        "Food",
-        "Healthcare",
-        "Transportation",
-        "Entertainment",
-        "Savings",
-        "Donations",
-        "Other",
-      ];
-
       node.innerHTML = `${node.innerHTML.replace(
         "{{multiRange}}",
         ""
@@ -246,7 +224,7 @@ export class SurveyPage implements AfterViewInit {
         const table = document.getElementById("proportions-table");
         const percentages = piechart.getAllSliceSizePercentages();
 
-        this.setValuesInModel(categories, percentages);
+        this.setValuesInModel(percentages);
 
         let labelsRow = "<tr>";
         let propsRow = "<tr>";
@@ -329,7 +307,7 @@ export class SurveyPage implements AfterViewInit {
         }
 
         // setto i valori nel modello
-        this.setValuesInModel(categories, ranges);
+        this.setValuesInModel(ranges);
       });
       clearInterval(loop);
     }, 1000);
@@ -340,7 +318,7 @@ export class SurveyPage implements AfterViewInit {
    * @param categories - Categorie.
    * @param ranges - Range.
    */
-  setValuesInModel(categories: string[], ranges: number[]) {
+  setValuesInModel(ranges: number[]) {
     const obj = {};
     categories.forEach((category, i) => {
       obj[category.toLowerCase()] = ranges[i + 1];

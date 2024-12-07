@@ -1,3 +1,25 @@
+export const categories = [
+  "Housing",
+  "Food",
+  "Healthcare",
+  "Transportation",
+  "Entertainment",
+  "Savings",
+  "Donations",
+  "Other",
+];
+
+export const colors = [
+  "#17deee",
+  "#ff7f50",
+  "#ff4162",
+  "#ecf284",
+  "#10aeb2",
+  "#0078ff",
+  "#00d86f",
+  "#fff",
+];
+
 export const json = {
   title: "Experiment on Financial Behavior and Anonymity",
   description: "A study on how anonymity influences financial decision-making.",
@@ -46,6 +68,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         {
           type: "dropdown",
           name: "age_group",
+          analytics: true,
           title: "Select your age group:",
           isRequired: false,
           choices: [
@@ -59,6 +82,8 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         {
           type: "radiogroup",
           name: "gender",
+          analytics: true,
+
           title: "What is your gender?",
           isRequired: false,
           choices: [
@@ -70,6 +95,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         {
           type: "dropdown",
           name: "education",
+          analytics: true,
           title: "What is your highest level of education?",
           isRequired: false,
           choices: [
@@ -83,6 +109,8 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         {
           type: "dropdown",
           name: "employment_status",
+          analytics: true,
+
           title: "What is your current employment status?",
           isRequired: false,
           choices: [
@@ -143,6 +171,8 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         {
           type: "matrix",
           name: "financial_priorities",
+          analytics: true,
+
           title:
             "Please indicate how important the following financial goals are to you:",
           columns: [
@@ -167,6 +197,8 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         {
           type: "radiogroup",
           name: "financial_control",
+          analytics: true,
+
           title: "How do you typically manage your personal finances?",
           choices: [
             { value: "manual", text: "Manually (e.g., cash or spreadsheets)" },
@@ -180,6 +212,8 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         {
           type: "matrix",
           name: "spending_frequency",
+          analytics: true,
+
           title: "How often do you allocate funds to the following categories?",
           columns: [
             { value: 1, text: "Never" },
@@ -223,6 +257,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           type: "matrix",
           name: "budget_distribution",
           isRequired: true,
+          realType: "matrixdropdown",
           title:
             // tslint:disable-next-line:max-line-length
             "Imagine you received 1000€ to allocate for a month. How would you distribute it among the following categories? {{multiRange}}",
@@ -235,23 +270,31 @@ We sincerely thank you for your time and valuable contribution. Should you have 
       title: "Habits and Preferences",
       elements: [
         {
+          analytics: true,
+
           type: "boolean",
           name: "volunteer",
           title: "Have you ever done any volunteer activities?",
         },
         {
           type: "boolean",
+          analytics: true,
+
           name: "willing_to_donate",
           title:
             "Would you be willing to give up a small part of your salary to help those in need?",
         },
         {
           type: "boolean",
+          analytics: true,
+
           name: "smoking",
           title: "Do you smoke?",
         },
         {
           type: "text",
+          analytics: true,
+
           name: "smoking_expense",
           title: "If yes, how much do you spend on smoking per month?",
           visibleIf: "{smoking} = true",
@@ -260,10 +303,14 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         },
         {
           type: "boolean",
+          analytics: true,
+
           name: "alcohol",
           title: "Do you consume alcohol?",
         },
         {
+          analytics: true,
+
           type: "text",
           name: "smoking_expense",
           title: "If yes, how much do you spend on alcohol per month?",
@@ -283,6 +330,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
       name: "post_survey",
       elements: [
         {
+          analytics: true,
           type: "matrix",
           name: "post_survey",
           title: "How much you agree with these statements?",

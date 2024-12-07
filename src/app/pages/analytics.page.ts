@@ -1,24 +1,144 @@
+/**
+ * @file analytics.page.ts
+ * @description Componente Angular per la pagina di analisi delle donazioni.
+ */
+
 import { Component } from "@angular/core";
-import { json } from "../data/survey2";
+import * as X from "../data/survey2";
 import { HttpClient } from "@angular/common/http";
 import { SurveyService } from "./survey.service";
+import { AnalyticsService } from "./analytics.service";
+declare var echarts, Grid3DComponent, Bar3DChart;
 
 @Component({
   selector: "analytics-page",
   templateUrl: "./analytics.page.html",
+  styleUrls: ["./analytics.page.css"],
 })
 export class AnalyticsPage {
+  /**
+   * Dati filtrati in base al valore del filtro.
+   */
   data;
-  json = json;
 
-  constructor(private http: HttpClient, private surveyService: SurveyService) {
-    this.http
-      .get(SurveyService.getUrl(""))
-      .subscribe((data: any) => {
-        this.data = [];
-        Object.values(data).forEach((e) => this.data.push(...Object.values(e)));
+  /**
+   * Dati originali non filtrati.
+   */
+  originalData;
 
-        // this.data = surveyService.getCompressedData(data);
+  /**
+   * JSON contenente i dati del sondaggio.
+   */
+  json;
+
+  /**
+   * Colori utilizzati nei grafici.
+   */
+  colors = X.colors;
+
+  /**
+   * Valore del filtro attuale.
+   */
+  private filterValue;
+
+  /**
+   * Categoria selezionata per l'analisi.
+   */
+  selectedCategory = "donations";
+
+  /**
+   * Categorie disponibili per l'analisi.
+   */
+  categories = X.categories.map((e) => e.toLowerCase());
+
+  /**
+   * Istogramma dei dati.
+   */
+  histoChart;
+
+  /**
+   * Imposta il valore del filtro e aggiorna i dati filtrati.
+   * @param value Il nuovo valore del filtro.
+   */
+  set filter(value) {
+    this.filterValue = value;
+    this.data = null;
+    setTimeout(() => {
+      this.data = this.originalData.filter((e) => e.experiment_group === value);
+    }, 500);
+  }
+
+  /**
+   * Restituisce il valore attuale del filtro.
+   * @returns Il valore del filtro.
+   */
+  get filter() {
+    return this.filterValue;
+  }
+
+  /**
+   * Genera un istogramma dai dati forniti.
+   * @param data I dati da analizzare.
+   * @param size La dimensione dei bin dell'istogramma.
+   * @returns Un array di coppie [valore, frequenza].
+   */
+  histogram(data, size) {
+    let min = Infinity;
+    let max = -Infinity;
+
+    for (const item of data) {
+      if (item < min) {
+        min = item;
+      } else if (item > max) {
+        max = item;
+      }
+    }
+
+    const bins = Math.ceil((max - min + 1) / size);
+
+    const histo = new Array(bins).fill(0);
+
+    for (const item of data) {
+      histo[Math.floor((item - min) / size)]++;
+    }
+
+    return histo.map((item, index) => [min + (index + 1) * size, item]);
+  }
+
+  /**
+   * Costruttore del componente AnalyticsPage.
+   * @param http Servizio HttpClient per le richieste HTTP.
+   * @param analyticsService Servizio per la generazione dei grafici di analisi.
+   */
+  constructor(private http: HttpClient, private analyticsService: AnalyticsService) {
+    this.json = X.json;
+    this.json.pages.forEach((e) => {
+      e.elements = e.elements.filter((e) => e.analytics);
+    });
+    this.http.get(SurveyService.getUrl("")).subscribe((data: any) => {
+      this.originalData = [];
+      Object.values(data).forEach((e) =>
+        this.originalData.push(...Object.values(e))
+      );
+      this.filter = "anonimo";
+      const chartDom = document.getElementById("chart") as HTMLElement;
+      this.histoChart = echarts.init(chartDom);
+      this.histoChart.setOption({
+        textStyle: {
+          color: "white",
+        },
+        color: ["orange", "yellow"],
       });
+      this.analyticsService.generateEChart.bind(this)();
+      this.analyticsService.generateEChart3D.bind(this)();
+    });
+  }
+
+  /**
+   * Genera un grafico EChart per la categoria specificata.
+   * @param type Il tipo di grafico da generare (predefinito: 'donations').
+   */
+  generateEChart(type = 'donations') {
+    this.analyticsService.generateEChart.bind(this)(type);
   }
 }

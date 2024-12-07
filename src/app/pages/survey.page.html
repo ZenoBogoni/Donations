@@ -38,7 +38,6 @@
           <td>{{ donation.time | date: 'dd/MM/yyyy HH:mm'}}</td>
         </tr>
       </table>
-      <button class="sd-btn sd-navigation__next-btn" (click)="step = step + 1">Start the survey</button>
     </ng-container>
     <ng-container *ngIf="step === 1">
       <survey [model]="model" (submitSurvey)="sendData($event)"></survey>

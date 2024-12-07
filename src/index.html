@@ -12,6 +12,7 @@
     <script src="https://cdn.rawgit.com/inexorabletash/polyfill/master/typedarray.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
     <script src="https://www.jqueryscript.net/demo/touch-draggable-pie/draggable-piechart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
     <script src="
       https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js
     "></script>
@@ -22,6 +23,10 @@
     <script src="assets/multirange.js"></script>
     <app-root>Loading...</app-root>
     <script type="module">
+
+import * as gl from 'https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js';
+console.log(gl)
+
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
