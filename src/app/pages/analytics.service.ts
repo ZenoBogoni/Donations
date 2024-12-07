@@ -12,7 +12,6 @@ declare var echarts;
   providedIn: "root",
 })
 export class AnalyticsService {
-
   /**
    * Genera un grafico a barre con ECharts evidenziando l'evoluzione delle donazioni.
    * Utilizza i dati compressi per visualizzazione.
@@ -57,11 +56,8 @@ export class AnalyticsService {
         return "";
       }
       return (
-        (
-          // tslint:disable-next-line:radix
-          (parseInt(params.value[1]) / arr.length) *
-          100
-        ).toFixed(0) + "%"
+        // tslint:disable-next-line:radix
+        ((parseInt(params.value[1]) / arr.length) * 100).toFixed(0) + "%"
       );
     };
 
@@ -71,6 +67,13 @@ export class AnalyticsService {
           color: "white",
         },
         selectedMode: true,
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          magicType: { type: ["line", "bar"] },
+          saveAsImage: {},
+        },
       },
       xAxis: [
         {
@@ -117,6 +120,7 @@ export class AnalyticsService {
               color: "#333",
             },
           },
+          name: "Frequency histogram",
         },
         {
           gridIndex: 1,
@@ -147,7 +151,7 @@ export class AnalyticsService {
             padding: 5,
             borderRadius: 5,
             color: "black",
-            formatter: formatter(anonimo)
+            formatter: formatter(anonimo),
           },
           barWidth: "10",
           data: histoA,
@@ -172,7 +176,7 @@ export class AnalyticsService {
             padding: 5,
             borderRadius: 5,
             color: "black",
-            formatter: formatter(nominativo)
+            formatter: formatter(nominativo),
           },
           data: histoN,
         },
@@ -219,6 +223,12 @@ export class AnalyticsService {
       axisLabel: {
         color: "white",
       },
+      toolbox: {
+        show: true,
+        feature: {
+          saveAsImage: {},
+        }
+      },
       color: ["orange", "yellow"],
       xAxis3D: {
         type: "category",
@@ -230,6 +240,10 @@ export class AnalyticsService {
       },
       zAxis3D: {
         type: "value",
+        name: "Frequency",
+        nameTextStyle: {
+          color: "white",
+        },
       },
       grid3D: {
         boxWidth: 200,
@@ -259,8 +273,93 @@ export class AnalyticsService {
         })
 
     };
-    console.log(option);
     const chartDom = document.getElementById("chart2") as HTMLElement;
+    const chart = echarts.init(chartDom);
+    chart.setOption(option);
+  }
+
+  generateEChartAvg(this: AnalyticsPage) {
+    const anonimo = this.originalData.filter(
+      (e) => e.experiment_group === "anonimo"
+    );
+    const nominativo = this.originalData.filter(
+      (e) => e.experiment_group === "non_anonimo"
+    );
+
+    const final = [];
+
+    const average = (arr) => arr.reduce((a, b) => (a || 0) + (b || 0), 0) / arr.length;
+
+    this.categories.forEach((category) => {
+      final.push([
+        average(anonimo.map((e) => e.budget_distribution[category])),
+        average(nominativo.map((e) => e.budget_distribution[category])),
+      ]);
+    });
+
+    console.log(final);
+
+    const grid = {
+      left: 100,
+      right: 100,
+      top: 50,
+      bottom: 50,
+    };
+    const series = this.categories.map((name, sid) => {
+      return {
+        name,
+        type: "bar",
+        stack: "total",
+        barWidth: "60%",
+        label: {
+          show: true,
+          formatter: (params) => Math.round(params.value) + "%",
+        },
+        data: final[sid].map((d, did) =>
+          d
+        ),
+      };
+    });
+    const option = {
+      textStyle: {
+        color: "white",
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          saveAsImage: {},
+          magicType: {
+            type: ["line", "bar"],
+          },
+        }
+      },
+      color: X.colors,
+      legend: {
+        right: '20%',
+        textStyle: {
+          color: "white",
+        },
+        selectedMode: false,
+      },
+      grid,
+      yAxis: {
+        type: "value",
+        axisLabel: {
+          formatter: "{value}%",
+        },
+        splitLine: {
+          lineStyle: {
+            color: "#333",
+          },
+        }
+      },
+      xAxis: {
+        type: "category",
+        data: ["Anonymous", "Nominative"],
+      },
+      series,
+    };
+    const chartDom = document.getElementById("chart3") as HTMLElement;
     const chart = echarts.init(chartDom);
     chart.setOption(option);
   }

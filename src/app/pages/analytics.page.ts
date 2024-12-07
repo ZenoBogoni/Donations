@@ -130,6 +130,7 @@ export class AnalyticsPage {
         color: ["orange", "yellow"],
       });
       this.analyticsService.generateEChart.bind(this)();
+      this.analyticsService.generateEChartAvg.bind(this)();
       this.analyticsService.generateEChart3D.bind(this)();
     });
   }
