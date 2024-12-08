@@ -1,45 +1,51 @@
 <div class="d-flex">
-<h1>Survey Analytics</h1>
+  <h1>Survey Analytics</h1>
 
-<div class="m-auto small">
-  <button
-    *ngFor="let cat of categories; let idx = index"
-    [style.background-color]="colors[idx]"
-    class="sd-btn sd-navigation__next-btn"
-    [class.disactive]="cat !== selectedCategory"
-    (click)="generateEChart(cat)"
-  >
-    {{cat}}
-  </button>
-</div>
+  <iframe
+    src="https://lookerstudio.google.com/embed/reporting/f7f72756-0d47-4f40-92d8-35d66825efac/page/kIV1C"
+    frameborder="0"
+    allowfullscreen
+    sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+  ></iframe>
 
-<div style="display: flex; margin: 2rem;">
-  <div id="chart" style="width: 100%; height: 50dvh; flex: 2"></div>
-  <div id="chart2" style="width: 100%; height: 50dvh; flex: 2"></div>
-  <div id="chart3" style="width: 100%; height: 50dvh; flex: 1"></div>
+  <div class="m-auto small">
+    <button
+      *ngFor="let cat of categories; let idx = index"
+      [style.background-color]="colors[idx]"
+      class="sd-btn sd-navigation__next-btn"
+      [class.disactive]="cat !== selectedCategory"
+      (click)="generateEChart(cat)"
+    >
+      {{cat}}
+    </button>
+  </div>
 
-</div>
+  <div style="display: flex; margin: 2rem">
+    <div id="chart" style="width: 100%; height: 50dvh; flex: 2"></div>
+    <div id="chart2" style="width: 100%; height: 50dvh; flex: 2"></div>
+    <div id="chart3" style="width: 100%; height: 50dvh; flex: 1"></div>
+  </div>
 
-<div class="m-auto">
-  <button
-    class="sd-btn sd-navigation__next-btn"
-    [class.disactive]="filter !== 'anonimo'"
-    (click)="filter = 'anonimo'"
-  >
-    Anonymous
-  </button>
-  <button
-    class="sd-btn sd-navigation__next-btn"
-    [class.disactive]="filter !== 'non_anonimo'"
-    (click)="filter = 'non_anonimo'"
-  >
-    Non Anonymous
-  </button>
-</div>
+  <div class="m-auto">
+    <button
+      class="sd-btn sd-navigation__next-btn"
+      [class.disactive]="filter !== 'anonimo'"
+      (click)="filter = 'anonimo'"
+    >
+      Anonymous
+    </button>
+    <button
+      class="sd-btn sd-navigation__next-btn"
+      [class.disactive]="filter !== 'non_anonimo'"
+      (click)="filter = 'non_anonimo'"
+    >
+      Non Anonymous
+    </button>
+  </div>
 
-<survey-analytics
-  [surveyJson]="json"
-  [results]="data"
-  *ngIf="data"
-></survey-analytics>
+  <survey-analytics
+    [surveyJson]="json"
+    [results]="data"
+    *ngIf="data"
+  ></survey-analytics>
 </div>

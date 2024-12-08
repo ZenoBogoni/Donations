@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { SurveyPDF } from "survey-pdf";
 
-import { json } from "../data/survey";
+import { json } from "../data/survey2";
 
 const pdfOptions = {
   fontSize: 14,

@@ -21,8 +21,8 @@ export const colors = [
 ];
 
 export const json = {
-  title: "Experiment on Financial Behavior and Anonymity",
-  description: "A study on how anonymity influences financial decision-making.",
+  title: "Experiment on Financial Behavior",
+  description: "A study on financial decision-making.",
   logoPosition: "right",
   completedHtml: "<h3>Thank you for participating in this experiment!</h3>",
   pages: [
@@ -368,7 +368,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           analytics: true,
           type: "matrix",
           name: "post_survey",
-          title: "How much you agree with these statements?",
+          title: "How much do you agree with these statements?",
           isRequired: true,
           columns: [
             { value: 1, text: "Strongly disagree" },

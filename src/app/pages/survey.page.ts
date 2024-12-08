@@ -107,7 +107,7 @@ export class SurveyPage implements AfterViewInit {
       this.restartWhereLeft(data);
 
       // Unisce e linearizza i dati ricevuti dal server.
-      Object.values(data).forEach((e) => this.data.push(...Object.values(e)));
+      Object.values(data).forEach((e) => this.data.push(e));
       this.compressedData = this.surveyService.getCompressedData(this.data);
 
       // Salva i progressi nel localStorage quando i valori cambiano.
@@ -120,11 +120,15 @@ export class SurveyPage implements AfterViewInit {
       this.model.setValue('device', this.surveyService.getDeviceAndBrowser());
 
       // Ottiene il paese dell'utente.
-      this.surveyService.getCountry().then((country) => {
-        this.model.setValue('country', country);
-      }).catch(() => {
+      try {
+        this.surveyService.getCountry().then((country) => {
+          this.model.setValue('country', country);
+        }).catch(() => {
+          this.model.setValue('country', 'unknown');
+        });
+      } catch (e) {
         this.model.setValue('country', 'unknown');
-      });
+      }
     });
 
     // Genera un nuovo codice macchina se non esiste.
@@ -162,10 +166,11 @@ export class SurveyPage implements AfterViewInit {
   onAnswerChanged(sender: Model) {
     localStorage.setItem("progress", JSON.stringify(sender.getData()));
     localStorage.setItem("currentPage", JSON.stringify(sender.currentPageNo));
-    this.http
-      .put(SurveyService.getUrl(this.machineCode), {lastPage: sender.currentPageNo,
-        experiment_group: this.group === 0 ? "anonimo" : "non_anonimo"})
-      .subscribe(() => {});
+    if (sender.currentPageNo > 0) {
+      this.http
+        .put(SurveyService.getUrl(this.machineCode + '/lastPage'), sender.currentPageNo)
+        .subscribe(() => {});
+    }
   }
 
   /**
@@ -184,14 +189,13 @@ export class SurveyPage implements AfterViewInit {
    * @param data - Dati ricevuti dal server.
    */
   restartWhereLeft(data: any = {}) {
-    if (data[this.machineCode]) {
+    if (data[this.machineCode]?.tos) {
       this.step = 2;
       this.model.doComplete();
     } else if (localStorage.getItem("progress")) {
       this.model.mergeData(JSON.parse(localStorage.getItem("progress")) || {});
       this.model.currentPageNo =
         JSON.parse(localStorage.getItem("currentPage")) || 0;
-      this.step = 2;
     }
   }
 
@@ -280,7 +284,6 @@ export class SurveyPage implements AfterViewInit {
 
 
 
-      node = node.querySelector(".multiRange");
 
       // salvo i valori di default nel caso qualcuno skippasse
       // TODO: è skippabile?
@@ -294,7 +297,8 @@ export class SurveyPage implements AfterViewInit {
         donations: 12.5,
         other: 12.5,
       });
-
+      /*
+      node = node.querySelector(".multiRange");
       const recreateRanges: any = Object.values(
         this.model.getValue("budget_distribution") || {}
       );
@@ -321,7 +325,7 @@ export class SurveyPage implements AfterViewInit {
 
         // setto i valori nel modello
         this.setValuesInModel(ranges);
-      });
+      }); */
       clearInterval(loop);
     }, 1000);
   }
@@ -334,7 +338,7 @@ export class SurveyPage implements AfterViewInit {
   setValuesInModel(ranges: number[]) {
     const obj = {};
     categories.forEach((category, i) => {
-      obj[category.toLowerCase()] = ranges[i + 1];
+      obj[category.toLowerCase()] = ranges[i];
     });
 
     // valorizzo il modello

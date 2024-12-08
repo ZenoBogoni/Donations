@@ -18,7 +18,9 @@ export class SurveyService {
    * @returns {string} Codice macchina generato.
    */
   static generateMachineCode() {
-    const append = Math.random() > 0.5 ? "1" : "0";
+    const rand = Math.random();
+    console.log(rand);
+    const append = rand > 0.5 ? "1" : "0";
     return append + Math.random().toString(36).substring(2, 15);
   }
 

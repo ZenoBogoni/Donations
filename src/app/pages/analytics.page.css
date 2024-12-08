@@ -2,6 +2,12 @@
   background: white !important;
 }
 
+iframe {
+  height: 150dvh;
+  width: 200dvw;
+  zoom: 0.25;
+}
+
 
 .sd-btn {
   margin-right: 1rem;
