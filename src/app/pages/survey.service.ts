@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class SurveyService {
   /**
@@ -13,21 +13,21 @@ export class SurveyService {
     return `https://donationsexperiment-default-rtdb.europe-west1.firebasedatabase.app/${obj}.json`;
   }
 
-   /**
+  /**
    * Genera un codice macchina casuale.
    * @returns {string} Codice macchina generato.
    */
-   static generateMachineCode() {
+  static generateMachineCode() {
     const append = Math.random() > 0.5 ? "1" : "0";
     return append + Math.random().toString(36).substring(2, 15);
   }
 
-   /**
+  /**
    * Ottiene i dati compressi per la visualizzazione.
    * @param {any[]} baseData - Dati ricevuti dal server.
    * @returns {any[] | null} Dati compressi.
    */
-   getCompressedData(baseData: any[]) {
+  getCompressedData(baseData: any[]) {
     if (!baseData) {
       return null;
     }
@@ -49,5 +49,48 @@ export class SurveyService {
       return obj;
     });
     return data.sort((a, b) => (b.time > a.time ? 1 : -1));
+  }
+
+  getDeviceAndBrowser() {
+    const userAgent = navigator.userAgent;
+    const platform = navigator.platform;
+
+    // Ottieni informazioni sul browser
+    let browser = "Unknown";
+    if (userAgent.includes("Chrome") && !userAgent.includes("Edg")) {
+      browser = "Chrome";
+    } else if (userAgent.includes("Firefox")) {
+      browser = "Firefox";
+    } else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) {
+      browser = "Safari";
+    } else if (userAgent.includes("Edg")) {
+      browser = "Edge";
+    } else if (userAgent.includes("MSIE") || userAgent.includes("Trident")) {
+      browser = "Internet Explorer";
+    }
+
+    // Restituisci il risultato
+    return {
+      browser: browser,
+      device: platform,
+    };
+  }
+
+  async getCountry() {
+    try {
+      const response = await fetch("https://ipapi.co/json/");
+      if (!response.ok) {
+        throw new Error("Errore nella chiamata API");
+      }
+      const data = await response.json();
+      return {
+        country: data.country_name,
+        region: data.region,
+        city: data.city,
+      };
+    } catch (error) {
+      console.error("Errore nel recupero della posizione:", error);
+      return null;
+    }
   }
 }

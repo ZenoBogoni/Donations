@@ -74,19 +74,27 @@ export class SurveyPage implements AfterViewInit {
     protected surveyService: SurveyService,
     private activated: ActivatedRoute
   ) {
-    this.activated.queryParams.subscribe((params) => {
-      if (params["force"]) {
-        localStorage.removeItem("progress");
-        localStorage.removeItem("currentPage");
-        localStorage.removeItem("machineCode");
-      }
-    });
     this.json = json;
     this.model = new Model(this.json);
     this.model.applyTheme(SurveyTheme.ContrastDark);
     this.model.cookieName = this.machineCode;
     this.model.showPrevButton = false;
 
+    this.activated.queryParams.subscribe((params) => {
+      if (params["force"]) {
+        localStorage.removeItem("progress");
+        localStorage.removeItem("currentPage");
+        localStorage.removeItem("machineCode");
+      }
+      this.model.setValue('referal', params['referal'] || 'unknown');
+      this.initialize();
+    });
+
+
+
+  }
+
+  initialize() {
     // Salva la pagina corrente nel localStorage quando cambia.
     this.model.onCurrentPageChanged.add(this.onPageChanged.bind(this));
 
@@ -102,17 +110,21 @@ export class SurveyPage implements AfterViewInit {
       Object.values(data).forEach((e) => this.data.push(...Object.values(e)));
       this.compressedData = this.surveyService.getCompressedData(this.data);
 
-      // Deprecato: Genera un grafico a linea con ECharts.
-      /* if (this.group === 1) {
-        // Genera un grafico a linea con ECharts.
-        this.generateEChart();
-      } */
-
       // Salva i progressi nel localStorage quando i valori cambiano.
       this.model.onValueChanged.add(this.onAnswerChanged.bind(this));
 
       // Invia i dati completati al server quando il sondaggio è completato.
       this.model.onComplete.add(this.onCompleted.bind(this));
+
+      // Ottiene il dispositivo e il browser dell'utente.
+      this.model.setValue('device', this.surveyService.getDeviceAndBrowser());
+
+      // Ottiene il paese dell'utente.
+      this.surveyService.getCountry().then((country) => {
+        this.model.setValue('country', country);
+      }).catch(() => {
+        this.model.setValue('country', 'unknown');
+      });
     });
 
     // Genera un nuovo codice macchina se non esiste.
@@ -136,7 +148,7 @@ export class SurveyPage implements AfterViewInit {
     const payload = sender.getData();
     payload.time = new Date().toISOString();
     this.http
-      .post(SurveyService.getUrl(this.machineCode), payload)
+      .put(SurveyService.getUrl(this.machineCode), payload)
       .subscribe(() => {});
     if (this.group === 1) {
       this.step = 2;
@@ -151,7 +163,8 @@ export class SurveyPage implements AfterViewInit {
     localStorage.setItem("progress", JSON.stringify(sender.getData()));
     localStorage.setItem("currentPage", JSON.stringify(sender.currentPageNo));
     this.http
-      .post(SurveyService.getUrl(this.machineCode + '/lastPage'), sender.currentPageNo)
+      .put(SurveyService.getUrl(this.machineCode), {lastPage: sender.currentPageNo,
+        experiment_group: this.group === 0 ? "anonimo" : "non_anonimo"})
       .subscribe(() => {});
   }
 

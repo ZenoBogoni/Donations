@@ -66,6 +66,41 @@ We sincerely thank you for your time and valuable contribution. Should you have 
       name: "demographics",
       elements: [
         {
+          type: "text",
+          name: "device",
+          visibleIf: false,
+        },
+        {
+          analytics: true,
+          type: "text",
+          name: "country",
+          visibleIf: false,
+        },
+        {
+          analytics: true,
+          type: "text",
+          name: "region",
+          visibleIf: false,
+        },
+        {
+          analytics: true,
+          type: "text",
+          name: "city",
+          visibleIf: false,
+        },
+        {
+          analytics: true,
+          type: "text",
+          name: "browser",
+          visibleIf: false,
+        },
+        {
+          analytics: true,
+          type: "text",
+          name: "device",
+          visibleIf: false,
+        },
+        {
           type: "dropdown",
           name: "age_group",
           analytics: true,
@@ -358,6 +393,13 @@ We sincerely thank you for your time and valuable contribution. Should you have 
             { value: "savings", text: "I felt judged for my responses." },
           ],
         },
+        {
+          type: "rating",
+          rateType: "smileys",
+          name: "overall_evaluation",
+          analytics: true,
+          title: "How would you rate your overall experience with this survey?",
+        }
       ],
     },
   ],
