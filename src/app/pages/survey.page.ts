@@ -120,6 +120,7 @@ export class SurveyPage implements AfterViewInit {
       const device = this.surveyService.getDeviceAndBrowser();
       this.model.setValue('device', device.device);
       this.model.setValue('browser', device.browser);
+      this.model.setValue('start_time', new Date().toISOString());
 
       // Ottiene il paese dell'utente.
       try {
