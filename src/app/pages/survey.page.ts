@@ -155,10 +155,10 @@ export class SurveyPage implements AfterViewInit {
       .put(SurveyService.getUrl(this.machineCode), payload)
       .subscribe(() => {});
     if (this.group === 1) {
+      this.data.push(payload);
       this.step = 2;
     }
   }
-
   /**
    * Salva i progressi nel localStorage quando i valori cambiano.
    * @param sender {Model} - Modello del sondaggio.
@@ -225,7 +225,7 @@ export class SurveyPage implements AfterViewInit {
         <canvas id="piechart" width="300" height="300">
           Your browser is too old!
         </canvas>
-            <table id="proportions-table"></table></div>
+            <div id="proportions-table"></div></div>
         `;
       const data = categories.map((category, i) => ({
         proportion: 0.125,
@@ -243,22 +243,19 @@ export class SurveyPage implements AfterViewInit {
 
         this.setValuesInModel(percentages);
 
-        let labelsRow = "<tr>";
-        let propsRow = "<tr>";
+        let propsRow = "<div class='row'>";
         for (let i = 0; i < data.length; i += 1) {
-          labelsRow += `<th>${data[i].format.label}</th>`;
 
           const v = `<var>${percentages[i].toFixed(0)}%</var>`;
           const plus =
             `<div id="plu-${categories[i]}" class="adjust-button" data-i="${i}" data-d="-1">&#43;</div>`;
           const minus =
             `<div id="min-${categories[i]}" class="adjust-button" data-i="${i}" data-d="1">&#8722;</div>`;
-          propsRow += `<td>${v}${plus}${minus}</td>`;
+          propsRow += `<div class="col-12 col-md-1 border-bottom border-dark"><b>${data[i].format.label}</b><br>${v}${plus}${minus}</div>`;
         }
-        labelsRow += "</tr>";
-        propsRow += "</tr>";
+        propsRow += "</div>";
 
-        table.innerHTML = labelsRow + propsRow;
+        table.innerHTML = propsRow;
 
         const adjust = document.getElementsByClassName("adjust-button");
 
