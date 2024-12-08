@@ -68,37 +68,37 @@ We sincerely thank you for your time and valuable contribution. Should you have 
         {
           type: "text",
           name: "device",
-          visibleIf: false,
+          visibleIf: "false",
         },
         {
           analytics: true,
           type: "text",
           name: "country",
-          visibleIf: false,
+          visibleIf: "false",
         },
         {
           analytics: true,
           type: "text",
           name: "region",
-          visibleIf: false,
+          visibleIf: "false",
         },
         {
           analytics: true,
           type: "text",
           name: "city",
-          visibleIf: false,
+          visibleIf: "false",
         },
         {
           analytics: true,
           type: "text",
           name: "browser",
-          visibleIf: false,
+          visibleIf: "false",
         },
         {
           analytics: true,
           type: "text",
           name: "device",
-          visibleIf: false,
+          visibleIf: "false",
         },
         {
           type: "dropdown",
