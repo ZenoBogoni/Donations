@@ -117,12 +117,16 @@ export class SurveyPage implements AfterViewInit {
       this.model.onComplete.add(this.onCompleted.bind(this));
 
       // Ottiene il dispositivo e il browser dell'utente.
-      this.model.setValue('device', this.surveyService.getDeviceAndBrowser());
+      const device = this.surveyService.getDeviceAndBrowser();
+      this.model.setValue('device', device.device);
+      this.model.setValue('browser', device.browser);
 
       // Ottiene il paese dell'utente.
       try {
         this.surveyService.getCountry().then((country) => {
-          this.model.setValue('country', country);
+          this.model.setValue('country', country.country);
+          this.model.setValue('city', country.city);
+          this.model.setValue('region', country.region);
         }).catch(() => {
           this.model.setValue('country', 'unknown');
         });
@@ -149,13 +153,14 @@ export class SurveyPage implements AfterViewInit {
    * @param sender {Model} - Modello del sondaggio.
    */
   onCompleted(sender: Model) {
-    const payload = sender.getData();
+    const payload = (localStorage.getItem("progress") && JSON.parse(localStorage.getItem("progress"))) || sender.getData();
     payload.time = new Date().toISOString();
     this.http
       .put(SurveyService.getUrl(this.machineCode), payload)
       .subscribe(() => {});
     if (this.group === 1) {
       this.data.push(payload);
+      this.compressedData = this.surveyService.getCompressedData(this.data);
       this.step = 2;
     }
   }
@@ -164,13 +169,14 @@ export class SurveyPage implements AfterViewInit {
    * @param sender {Model} - Modello del sondaggio.
    */
   onAnswerChanged(sender: Model) {
+    console.log(sender.getData());
     localStorage.setItem("progress", JSON.stringify(sender.getData()));
-    localStorage.setItem("currentPage", JSON.stringify(sender.currentPageNo));
-    if (sender.currentPageNo > 0) {
+    if (sender.currentPageNo > 0 && JSON.stringify(sender.currentPageNo) !== localStorage.getItem("currentPage")) {
       this.http
-        .put(SurveyService.getUrl(this.machineCode + '/lastPage'), sender.currentPageNo)
-        .subscribe(() => {});
+      .put(SurveyService.getUrl(this.machineCode + '/lastPage'), sender.currentPageNo)
+      .subscribe(() => {});
     }
+    localStorage.setItem("currentPage", JSON.stringify(sender.currentPageNo));
   }
 
   /**
@@ -221,7 +227,6 @@ export class SurveyPage implements AfterViewInit {
         "{{multiRange}}",
         ""
       )}<div class="container-range"><div class="multiRange" style="width: 100%;"></div>
-        <h3>Or you can use the following sliders:</h3>
         <canvas id="piechart" width="300" height="300">
           Your browser is too old!
         </canvas>
@@ -238,10 +243,9 @@ export class SurveyPage implements AfterViewInit {
       }));
 
       const onPieChartChange = (piechart) => {
+
         const table = document.getElementById("proportions-table");
         const percentages = piechart.getAllSliceSizePercentages();
-
-        this.setValuesInModel(percentages);
 
         let propsRow = "<div class='row'>";
         for (let i = 0; i < data.length; i += 1) {
@@ -251,7 +255,10 @@ export class SurveyPage implements AfterViewInit {
             `<div id="plu-${categories[i]}" class="adjust-button" data-i="${i}" data-d="-1">&#43;</div>`;
           const minus =
             `<div id="min-${categories[i]}" class="adjust-button" data-i="${i}" data-d="1">&#8722;</div>`;
-          propsRow += `<div class="col-12 col-md-1 border-bottom border-dark"><b>${data[i].format.label}</b><br>${v}${plus}${minus}</div>`;
+          propsRow += `<div class="col-12 col-md-1 border-bottom border-dark"><b>${data[i].format.label}</b><br>
+          ${v}${plus}${minus}<br>
+          <small>${(1000 * percentages[i] / 100).toFixed(2)}€</small>
+          </div>`;
         }
         propsRow += "</div>";
 
@@ -278,51 +285,20 @@ export class SurveyPage implements AfterViewInit {
         proportions: data,
         onchange: onPieChartChange,
       });
+      let prevPerc = pie.getAllSliceSizePercentages();
 
 
-
-
-      // salvo i valori di default nel caso qualcuno skippasse
-      // TODO: è skippabile?
-      this.model.setValue("budget_distribution", {
-        housing: 12.5,
-        food: 12.5,
-        healthcare: 12.5,
-        transportation: 12.5,
-        entertainment: 12.5,
-        savings: 12.5,
-        donations: 12.5,
-        other: 12.5,
-      });
-      /*
-      node = node.querySelector(".multiRange");
-      const recreateRanges: any = Object.values(
-        this.model.getValue("budget_distribution") || {}
-      );
-      if (recreateRanges) {
-        for (let i = 1; i < recreateRanges.length; i++) {
-          recreateRanges[i] += recreateRanges[i - 1];
+      setInterval(() => {
+        const percentages = pie.getAllSliceSizePercentages();
+        if (JSON.stringify(prevPerc) === JSON.stringify(percentages)) {
+          return;
         }
-      }
+        prevPerc = percentages;
 
-      const m = new MultiRange(node, {
-        names: categories,
-        ranges: recreateRanges?.length
-          ? recreateRanges
-          : [12.5, 25, 37.5, 50, 62.5, 75, 87.5, 99.999],
-        step: 0,
-      });
-      m.on("changed", (e) => {
-        // rimappo i valori in un oggetto
-        const ranges = _.cloneDeep(e.detail.ranges);
-        for (let i = ranges.length - 1; i > 0; i--) {
-          ranges[i] -= ranges[i - 1];
-          ranges[i] = Math.round(ranges[i] * 1000) / 1000;
-        }
+        this.setValuesInModel(percentages);
 
-        // setto i valori nel modello
-        this.setValuesInModel(ranges);
-      }); */
+      }, 1000);
+
       clearInterval(loop);
     }, 1000);
   }

@@ -65,41 +65,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
     {
       name: "demographics",
       elements: [
-        {
-          type: "text",
-          name: "device",
-          visibleIf: "false",
-        },
-        {
-          analytics: true,
-          type: "text",
-          name: "country",
-          visibleIf: "false",
-        },
-        {
-          analytics: true,
-          type: "text",
-          name: "region",
-          visibleIf: "false",
-        },
-        {
-          analytics: true,
-          type: "text",
-          name: "city",
-          visibleIf: "false",
-        },
-        {
-          analytics: true,
-          type: "text",
-          name: "browser",
-          visibleIf: "false",
-        },
-        {
-          analytics: true,
-          type: "text",
-          name: "device",
-          visibleIf: "false",
-        },
+
         {
           type: "dropdown",
           name: "age_group",
@@ -166,7 +132,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           type: "html",
           name: "budget_allocation_intro",
           visibleIf: "{experiment_group} = 'non_anonimo'",
-          html: "<div class='alert alert-danger'>Shared result!</div>",
+          html: "<div class='alert alert-warn'>Shared result!</div>",
         },
         {
           type: "text",
@@ -196,7 +162,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           type: "html",
           name: "group_notification",
           visibleIf: "{experiment_group} = 'non_anonimo'",
-          html: "<p>The information you provide will be kept confidential and will only be used for research purposes. <div class='alert alert-danger'>You will share only your <b>name, surname and your budget distribution</b> (marked question)</div> Your responses will not be shared with any third parties.</p>",
+          html: "<p>The information you provide will be kept confidential and will only be used for research purposes. <div class='alert alert-warn'>You will share only your <b>name, surname and your budget distribution</b> (marked question)</div> Your responses will not be shared with any third parties.</p>",
         },
       ],
     },
@@ -286,7 +252,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           type: "html",
           name: "budget_allocation_intro",
           visibleIf: "{experiment_group} = 'non_anonimo'",
-          html: "<div class='alert alert-danger'>Shared result!</div>",
+          html: "<div class='alert alert-warn'>Shared result!</div>",
         },
         {
           type: "matrix",
@@ -369,7 +335,6 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           type: "matrix",
           name: "post_survey",
           title: "How much do you agree with these statements?",
-          isRequired: true,
           columns: [
             { value: 1, text: "Strongly disagree" },
             { value: 2, text: "Disagree" },

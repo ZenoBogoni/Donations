@@ -19,8 +19,7 @@ export class SurveyService {
    */
   static generateMachineCode() {
     const rand = Math.random();
-    console.log(rand);
-    const append = rand > 0.5 ? "1" : "0";
+    const append = rand > 0.6 ? "1" : "0";
     return append + Math.random().toString(36).substring(2, 15);
   }
 
