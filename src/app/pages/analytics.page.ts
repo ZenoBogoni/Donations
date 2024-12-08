@@ -89,14 +89,15 @@ export class AnalyticsPage {
     for (const item of data) {
       if (item < min) {
         min = item;
-      } else if (item > max) {
+      }
+      if (item > max) {
         max = item;
       }
     }
 
     const bins = Math.ceil((max - min + 1) / size);
 
-    const histo = new Array(bins).fill(0);
+    const histo = new Array(bins > 0 ? bins : 0).fill(0);
 
     for (const item of data) {
       histo[Math.floor((item - min) / size)]++;
@@ -116,10 +117,7 @@ export class AnalyticsPage {
       e.elements = e.elements.filter((e) => e.analytics);
     });
     this.http.get(SurveyService.getUrl("")).subscribe((data: any) => {
-      this.originalData = [];
-      Object.values(data).forEach((e) =>
-        this.originalData.push(...Object.values(e))
-      );
+      this.originalData = Object.values(data || {}) || [];
       this.filter = "anonimo";
       const chartDom = document.getElementById("chart") as HTMLElement;
       this.histoChart = echarts.init(chartDom);
@@ -129,9 +127,11 @@ export class AnalyticsPage {
         },
         color: ["orange", "yellow"],
       });
-      this.analyticsService.generateEChart.bind(this)();
-      this.analyticsService.generateEChartAvg.bind(this)();
-      this.analyticsService.generateEChart3D.bind(this)();
+      if (this.originalData?.length) {
+        this.analyticsService.generateEChart.bind(this)();
+        this.analyticsService.generateEChartAvg.bind(this)();
+        this.analyticsService.generateEChart3D.bind(this)();
+      }
     });
   }
 

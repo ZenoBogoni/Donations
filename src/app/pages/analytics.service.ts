@@ -39,10 +39,10 @@ export class AnalyticsService {
     const meanA = mean(anonimo);
     const meanN = mean(nominativo);
 
-    for (let i = 0; i < 50; i++) {
+/*     for (let i = 0; i < 50; i++) {
       anonimo.push(meanA + (Math.random() - 0.5) * 5);
       nominativo.push(meanN + (Math.random() - 0.5) * 5);
-    }
+    } */
 
     const maxXAxis = Math.ceil(
       Math.max(Math.max(...anonimo), Math.max(...nominativo)) + 5
@@ -203,14 +203,14 @@ export class AnalyticsService {
       const mean = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
       const meanA = mean(anonimoData);
 
-      for (let i = 0; i < 50; i++) {
+/*       for (let i = 0; i < 50; i++) {
         anonimoData.push(meanA + (Math.random() - 0.5) * 5);
-      }
+      } */
 
       histoA.push(this.histogram(anonimoData, 1));
     });
 
-    const max = Math.max(...histoA.map((e) => Math.max(...e.map((d) => d[1]))));
+    const max = Math.max(...histoA.map((e) => Math.max(...e.map((d) => d[0]))));
 
     const y = this.categories.map((e) => e.toUpperCase());
     const x = [];
@@ -292,8 +292,8 @@ export class AnalyticsService {
 
     this.categories.forEach((category) => {
       final.push([
-        average(anonimo.map((e) => e.budget_distribution[category])),
-        average(nominativo.map((e) => e.budget_distribution[category])),
+        average(anonimo.map((e) => e.budget_distribution?.[category])),
+        average(nominativo.map((e) => e.budget_distribution?.[category])),
       ]);
     });
 
