@@ -65,6 +65,8 @@ export class SurveyPage implements AfterViewInit {
    */
   compressedData: any[] | undefined;
 
+  observers = Math.round(Math.random() * 5);
+
   /**
    * Costruttore del componente.
    * @param {HttpClient} http - Servizio HttpClient per le richieste HTTP.
@@ -95,6 +97,13 @@ export class SurveyPage implements AfterViewInit {
   }
 
   initialize() {
+
+    setInterval(() => {
+      if (Math.random() > 0.6) {
+        this.observers += Math.round((Math.random() - 0.5) * 2);
+      }
+    }, 5000);
+
     // Salva la pagina corrente nel localStorage quando cambia.
     this.model.onCurrentPageChanged.add(this.onPageChanged.bind(this));
 
