@@ -5,7 +5,7 @@ export const PostSurvey = {
   completedHtml: "<h3>Thank you for participating in this experiment!</h3>",
   pages: [
 
-    {
+    /* {
       name: "habits",
       title: "Habits and Preferences",
       elements: [
@@ -65,7 +65,7 @@ export const PostSurvey = {
             "Do you have a specific spending hobby that accounts for more than 10% of your income?",
         },
       ],
-    },
+    }, */
     {
       name: "post_survey",
       elements: [
