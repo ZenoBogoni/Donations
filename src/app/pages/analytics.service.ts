@@ -27,12 +27,12 @@ export class AnalyticsService {
     this.selectedCategory = type;
 
     const anonimo = this.originalData
-      .filter((e) => e.experiment_group === "anonimo")
-      .map((e) => e.budget_distribution?.[type])
+      .filter((e) => e.pre?.experiment_group === "anonimo")
+      .map((e) => (e.donation1?.donation / e.donation1.lives + e.donation2?.donation / e.donation2.lives) / 2)
       .filter((e) => e);
     const nominativo = this.originalData
-      .filter((e) => e.experiment_group === "non_anonimo")
-      .map((e) => e.budget_distribution?.[type])
+      .filter((e) => e.pre?.experiment_group === "non_anonimo")
+      .map((e) => (e.donation1?.donation / e.donation1.lives + e.donation2?.donation / e.donation2.lives) / 2)
       .filter((e) => e);
 
     const mean = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;

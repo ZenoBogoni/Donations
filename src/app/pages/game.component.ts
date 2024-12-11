@@ -149,7 +149,7 @@ export class GameComponent implements OnInit, AfterViewInit {
     return new Array(Math.max(0, this.donation.lives - 1)).fill(0);
   }
 
-  constructor(public http: HttpClient, private gameService: GameService) {}
+  constructor(public http: HttpClient, private gameService: GameService, private surveyService: SurveyService) {}
 
   /**
    * Metodo di inizializzazione del componente.
@@ -163,6 +163,25 @@ export class GameComponent implements OnInit, AfterViewInit {
     }
 
     this.preSurvey = new Model(PreSurvey);
+    // Ottiene il dispositivo e il browser dell'utente.
+    const device = this.surveyService.getDeviceAndBrowser();
+    this.preSurvey.setValue('experiment_group', this.machineCode[0] === '0' ? 'anonimo' : 'non_anonimo');
+    this.preSurvey.setValue('device', device.device);
+    this.preSurvey.setValue('browser', device.browser);
+    this.preSurvey.setValue('start_time', new Date().toISOString());
+
+    // Ottiene il paese dell'utente.
+    try {
+      this.surveyService.getCountry().then((country) => {
+        this.preSurvey.setValue('country', country.country);
+        this.preSurvey.setValue('city', country.city);
+        this.preSurvey.setValue('region', country.region);
+      }).catch(() => {
+        this.preSurvey.setValue('country', 'unknown');
+      });
+    } catch (e) {
+      this.preSurvey.setValue('country', 'unknown');
+    }
     this.preSurvey.showPrevButton = false;
     this.preSurvey.applyTheme(SurveyTheme.ContrastDark);
     this.preSurvey.cookieName = this.machineCode;

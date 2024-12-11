@@ -8,6 +8,8 @@ import * as X from "../data/survey2";
 import { HttpClient } from "@angular/common/http";
 import { SurveyService } from "./survey.service";
 import { AnalyticsService } from "./analytics.service";
+import { PostSurvey } from "../data/post.survey";
+import { PreSurvey } from "../data/pre.survey";
 declare var echarts, Grid3DComponent, Bar3DChart;
 
 @Component({
@@ -64,7 +66,7 @@ export class AnalyticsPage {
     this.filterValue = value;
     this.data = null;
     setTimeout(() => {
-      this.data = this.originalData.filter((e) => e.experiment_group === value);
+      this.data = this.originalData.filter((e) => e.pre?.experiment_group === value).map(e => e.pre);
     }, 500);
   }
 
@@ -112,10 +114,10 @@ export class AnalyticsPage {
    * @param analyticsService Servizio per la generazione dei grafici di analisi.
    */
   constructor(private http: HttpClient, private analyticsService: AnalyticsService) {
-    this.json = X.json;
-    this.json.pages.forEach((e) => {
+    this.json = [PreSurvey, PostSurvey];
+    this.json.forEach(d => d.pages.forEach((e) => {
       e.elements = e.elements.filter((e) => e.analytics);
-    });
+    }));
     this.http.get(SurveyService.getUrl("")).subscribe((data: any) => {
       this.originalData = Object.values(data || {}) || [];
       this.filter = "anonimo";
@@ -129,8 +131,8 @@ export class AnalyticsPage {
       });
       if (this.originalData?.length) {
         this.analyticsService.generateEChart.bind(this)();
-        this.analyticsService.generateEChartAvg.bind(this)();
-        this.analyticsService.generateEChart3D.bind(this)();
+/*         this.analyticsService.generateEChartAvg.bind(this)();
+        this.analyticsService.generateEChart3D.bind(this)(); */
       }
     });
   }
