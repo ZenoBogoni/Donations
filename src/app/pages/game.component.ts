@@ -21,7 +21,7 @@ export class GameComponent implements OnInit, AfterViewInit {
   observers = Math.round(Math.random() * 5);
   score = 0;
   scoreContainer: CountUp;
-  TOTAL_LIVES = 0;
+  TOTAL_LIVES = 4;
   life = new Array(this.TOTAL_LIVES).fill(0);
   internalState = +localStorage.getItem('state') || State.PRE;
   totalScore = 0;
