@@ -26,6 +26,7 @@ export class GameComponent implements OnInit, AfterViewInit {
   internalState = +localStorage.getItem('state') || State.PRE;
   totalScore = 0;
   leaderboard = [];
+  audios = {};
   status = State;
   machineCode = localStorage.getItem("machineCode");
   donation: Donation = {
@@ -53,29 +54,32 @@ export class GameComponent implements OnInit, AfterViewInit {
   }
 
   get donationArray() {
-    return new Array(this.donation.lives - 1).fill(0);
+    return new Array(Math.max(0, this.donation.lives - 1)).fill(0);
   }
 
   constructor(public http: HttpClient, private gameService: GameService) {}
 
   ngOnInit(): void {
 
-    if (!this.machineCode) {
+    if (!this.machineCode || location.href.includes('force')) {
       this.machineCode = SurveyService.generateMachineCode();
       localStorage.setItem("machineCode", this.machineCode);
+      this.state = State.PRE;
     }
 
     this.preSurvey = new Model(PreSurvey);
+    this.preSurvey.showPrevButton = false;
     this.preSurvey.applyTheme(SurveyTheme.ContrastDark);
     this.preSurvey.cookieName = this.machineCode;
     this.preSurvey.onComplete.add(() => {
-      this.state = State.WAITING;
+      this.state = State.TUTORIAL;
       this.sendData('pre', this.preSurvey).subscribe(() => {;
        this.start();
       });
     });
     this.postSurvey = new Model(PostSurvey);
     this.postSurvey.applyTheme(SurveyTheme.ContrastDark);
+    this.postSurvey.showPrevButton = false;
     this.postSurvey.cookieName = this.machineCode;
     this.postSurvey.onComplete.add(() => {
       this.getLeaderboard();
@@ -111,21 +115,31 @@ export class GameComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.internalState === State.WAITING || this.internalState === State.PAUSED) {
+    document.querySelectorAll('audio').forEach((e) => {
+      this.audios[e.id] = e;
+    });
+    if (this.internalState === State.WAITING || this.internalState === State.PAUSED ||
+      this.internalState === State.GAME_OVER || this.internalState === State.PLAYING) {
       this.state = State.WAITING;
       this.start();
     } else if (this.internalState === State.LEADERBOARD) {
       this.getLeaderboard();
+    } else if (this.state === State.TUTORIAL) {
+      this.start();
     }
   }
 
   start() {
+    this.audios['start'].play();
     this.gameService.start.bind(this)();
   }
 
   gameOver() {
+    this.audios['end'].play();
     this.state = State.GAME_OVER;
     this.totalScore += this.score;
+    this.donation.lives = 0;
+    this.donation.amount = 0;
     setTimeout(() => {
       const scoreDown = new CountUp('xp', 0, {startVal: this.score});
       const lifeUp = new CountUp('xpLife', 0);
@@ -188,6 +202,7 @@ export class State {
   static POST = 5;
   static PRE = 6;
   static LEADERBOARD = 7;
+  static TUTORIAL = 8;
 }
 
 

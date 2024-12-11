@@ -83,6 +83,30 @@ export const PostSurvey = {
           ],
           rows: [
             {
+              value: "effort_lives",
+              text: "I felt that earning lives in the game required effort.",
+            },
+            {
+              value: "bad_losing_lives",
+              text: "I felt bad when I lost lives.",
+            },
+            {
+              value: "motivated_donate",
+              text: "I felt more motivated to donate because I received lives from others.",
+            },
+            {
+              value: "good_donation_decisions",
+              text: "I felt good about my donation decisions.",
+            },
+            {
+              value: "pressure_donate",
+              text: "I felt pressure to donate.",
+            },
+            {
+              value: "understood_donation_impact",
+              text: "I understood how my donation would affect other players in the game.",
+            },
+            /* {
               value: "privacy",
               text: "I am concerned about my privacy when sharing personal information online.",
             },
@@ -94,7 +118,7 @@ export const PostSurvey = {
               value: "future",
               text: "I understood the meaning of the questionnaire.",
             },
-            { value: "savings", text: "I felt judged for my responses." },
+            { value: "savings", text: "I felt judged for my responses." }, */
           ],
         },
         {
@@ -102,7 +126,7 @@ export const PostSurvey = {
           rateType: "smileys",
           name: "overall_evaluation",
           analytics: true,
-          title: "How would you rate your overall experience with this survey?",
+          title: "How would you rate your overall experience with this experiment?",
         }
       ],
     },

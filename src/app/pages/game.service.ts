@@ -158,9 +158,11 @@ export class GameService {
 
       if (ball.AABB(paddle)) {
         that.score += Math.round(Math.random() * 500);
+        that.audios['win'].play();
         ball.dx = 1;
       }
       if (ball.AABB(ai)) {
+        that.audios['click'].play();
         ball.dx = -1;
       }
       ball.move(4);
@@ -169,6 +171,7 @@ export class GameService {
 
       if (ball_bounce_dx === 1) {
       } else if (ball_bounce_dx === -1) {
+        that.audios['hit'].play();
         that.life.pop();
         if (that.life.length === 0) {
           clearInterval(id);

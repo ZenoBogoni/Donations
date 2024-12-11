@@ -10,18 +10,15 @@ export const PreSurvey = {
         {
           type: "html",
           name: "introduction",
-          html: `<p><h3>Introduction to this survey</h3>
+          html: `<p><h3>Introduction to this experiment game</h3>
 
-Thank you for your interest in participating in this study. This survey is part of an academic research project aimed at understanding financial allocation mechanisms and their impact on individual economic decision-making. Your participation is essential to the success of this research and will contribute to a deeper understanding of financial behavior in a social context.
+Hello and welcome to our study! You’ll play a simple and fun game while helping us understand how people make decisions about sharing.
 
 <h6>Privacy and data sharing</h6>
 Some of the information collected during this questionnaire <b>may be shared publicly</b> in aggregated, anonymous or personally identifiable form for research purposes. The results will be used solely for academic purposes and published in compliance with deontological ethics.
 
 <h6>Importance of your contribution</h6>
 Your input represents a valuable contribution to this study, helping us gather meaningful data that reflects diverse individual perspectives. Providing accurate and honest responses is crucial to ensuring the quality and reliability of the analyses derived from this research.
-
-<h6>Time commitment and details</h6>
-The survey will take approximately 5-10 minutes to complete. There are no right or wrong answers; we kindly ask you to respond based on your personal experiences and opinions.
 
 We sincerely thank you for your time and valuable contribution. Should you have any questions or require further information, please do not hesitate to contact us.</p>`,
         },
@@ -35,7 +32,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
             },
           ],
           title:
-            "Please confirm that you have read and understood the information provided above.",
+            "By participating, you agree to allow us to use your anonymized data for research. You can leave the study at any time without penalty.",
           isRequired: true,
         },
       ],
@@ -95,8 +92,29 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           choices: [
             { value: "unemployed", text: "Unemployed" },
             { value: "student", text: "Student" },
+            { value: "working-student", text: "Working student" },
             { value: "employed", text: "Employed" },
             { value: "retired", text: "Retired" },
+          ],
+        },
+        {
+          type: "matrix",
+          name: "personal_info",
+          analytics: true,
+          title:
+            "How much do you agree with the following statements?",
+            columns: [
+              { value: 1, text: "Strongly disagree" },
+              { value: 2, text: "Disagree" },
+              { value: 3, text: "Neutral" },
+              { value: 4, text: "Agree" },
+              { value: 5, text: "Strongly agree" },
+            ],
+          rows: [
+            { value: "online_games", text: "I am familiar with online games" },
+            { value: "taking_experiments", text: "I often take part in online experiments like this" },
+            { value: "generous", text: "I am generous" },
+            { value: "competitive", text: "I am competitive " },
           ],
         },
       ],

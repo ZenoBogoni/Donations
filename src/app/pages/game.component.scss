@@ -93,6 +93,9 @@ input {
     background: #ffac4d !important;
   }
 }
+.to-yellow {
+  filter: hue-rotate(200deg);
+}
 
 
 .cursor-question {
@@ -102,4 +105,21 @@ input {
 .left-50 {
   left: 50%;
   transform: translateX(-50%);
+}
+
+.opacity-25 {
+  filter: grayscale(1);
+}
+
+
+.text-left {
+  text-align: left;
+}
+
+canvas {
+  scale: 0.5;
+}
+
+kbd {
+  box-shadow: 1px 2px 0 #888, 0 3px 5px #0005;
 }
