@@ -321,6 +321,7 @@ export class GameComponent implements OnInit, AfterViewInit {
           this.machineCode + "/donation" + this.currentMatch
         ),
         {
+          name: this.donation.name,
           donation: this.donation.amount,
           lives: this.donation.lives,
         }
