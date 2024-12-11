@@ -1,0 +1,248 @@
+<div class="position-fixed top-0 right-0 m-3">
+  <div class="badge badge-pill bg-white rounded-pill text-dark">
+    <img
+      src="https://cdn-icons-gif.flaticon.com/7920/7920923.gif"
+      width="30"
+      style="filter: hue-rotate(200deg)"
+    />
+    {{ observers }} observers
+  </div>
+</div>
+
+<ng-container *ngIf="![status.PRE, status.POST, status.LEADERBOARD].includes(state)">
+<div id="view" >
+  <canvas id="bg"></canvas>
+  <canvas id="game"></canvas>
+  <div class="position-fixed top-0 text-center w-100 row left-50">
+    <small class="col-12 bg-black">Match {{ currentMatch }} / 3</small>
+    <div class="col-6">
+      <img
+        src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
+        width="20"
+        style="filter: hue-rotate(45deg) invert(1); mix-blend-mode: lighten"
+      />
+
+      <h6 id="counter" class="d-inline">{{ score }}</h6>
+    </div>
+    <div class="col-6" style="color: #ffd84d">
+      <img
+        *ngFor="let l of life"
+        src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+        width="20"
+        style="filter: hue-rotate(45deg) invert(1); mix-blend-mode: lighten"
+      />
+    </div>
+  </div>
+
+
+</div>
+
+</ng-container>
+
+<div class="row w-50 left-50 position-absolute justify-content-center m-2 align-items-center" *ngIf="state === status.LEADERBOARD">
+  <div class="col-auto text-center">
+    <img src="https://cdn-icons-gif.flaticon.com/17864/17864880.gif" width="50" class="m-auto"         style="filter: hue-rotate(45deg) invert(1); mix-blend-mode: lighten" />
+    <h2>
+      Leaderboard
+    </h2>
+  </div>
+  <div class="col-12" *ngFor="let row of leaderboard">
+    <div class="row border-bottom" [class.alert-warning]="row.me" [class.alert]="row.me">
+      <div class="col-6">
+        {{row.donation1?.name || row?.name || 'Anonymous'}}
+      </div>
+      <div class="col-6">
+        <img
+          src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+          width="20"
+          style="filter: hue-rotate(45deg) invert(1); mix-blend-mode: lighten"
+        />
+        <span>{{ row.totalScore }}</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<survey [model]="postSurvey" (submitSurvey)="sendData($event, 'post'); state = status.LEADERBOARD" *ngIf="state === status.POST"></survey>
+<survey [model]="preSurvey" (submitSurvey)="sendData($event, 'pre'); state = status.WAITING; start()" *ngIf="state === status.PRE"></survey>
+
+
+
+
+<div
+  class="modal text-dark"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  *ngIf="state === status.GAME_OVER"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content text-center">
+      <div class="modal-body">
+        <img
+          src="https://cdn-icons-gif.flaticon.com/14118/14118602.gif"
+          width="80"
+          class="m-auto"
+          style="filter: hue-rotate(200deg)"
+        />
+        <h3>Donate or keep?</h3>
+        <p>
+          <strong>Ops!</strong> You lost all your lives. Your score is worth new
+          lives that you can use to continue playing or donate to other players.
+        </p>
+        <h3>
+          <span id="xp">{{ score }}</span>
+          <img
+            src="https://cdn-icons-gif.flaticon.com/7740/7740748.gif"
+            width="30"
+            style="filter: hue-rotate(200deg)"
+          />
+          <img
+            src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+            width="30"
+            style="filter: hue-rotate(200deg)"
+          />
+          <span id="xpLife">0</span>
+        </h3>
+        <hr />
+        <p>
+          <strong>Donate your score to other players</strong>
+        </p>
+        <img
+            *ngFor="let l of donationArray; let idx = index"
+            [class.opacity-50]="idx >= donation.amount"
+            class="pop"
+            src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+            width="30"
+            style="filter: hue-rotate(200deg)"
+          />
+          <p>
+            I will donate <strong>{{ donation.amount }}</strong> lives to other<br>
+            I will keep <strong>{{ donation.lives - donation.amount }}</strong> lives for myself
+          </p>
+        <input
+          type="range"
+          class="form-range d-block"
+          [(ngModel)]="donation.amount"
+          placeholder="How many lives?"
+          min="0"
+          max="{{ donation.lives - 1 }}"
+          step="1"
+          value="0"
+        />
+        <ng-container *ngIf="machineCode[0] === '1'">
+          <p class="alert alert-warning p-1 mt-2">
+            Receivers will know their benefactor's name and message.
+          </p>
+          <input
+            type="text"
+            class="form-control mb-2"
+            [(ngModel)]="donation.name"
+            placeholder="Your name"
+          />
+          <textarea
+            class="form-control"
+            [(ngModel)]="donation.message"
+            placeholder="A message of love"
+          ></textarea>
+        </ng-container>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" (click)="next()">Next match</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal text-dark"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  *ngIf="state === status.WAITING"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content text-center">
+      <div class="modal-body mb-2">
+        <p>You are about to start the first of 3 matches.<br /></p>
+        <h1>
+          <img
+            src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+            width="50"
+            style="filter: hue-rotate(200deg)"
+          />
+          <span>{{ TOTAL_LIVES - incomingDonation.amount }} lives</span>
+        </h1>
+        <p>Lives are useful to continue playing and reach higher scores.</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn"
+          (click)="state = status.RECEIVING_DONATION; setTooltip()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal text-dark"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  *ngIf="state === status.RECEIVING_DONATION"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content text-center">
+      <div class="modal-body">
+        <p>
+          You are about to start the first of 3 matches.<br />
+          <b>
+            A benefactor has donated
+            <span class="text-primary">{{ incomingDonation.amount }}</span>
+            lives to you.
+          </b>
+        </p>
+        <h1>
+          <img
+            src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+            width="50"
+            style="filter: hue-rotate(200deg)"
+          />
+          <span
+            ><b class="text-primary"
+              >+{{ incomingDonation.amount }} lives</b
+            ></span
+          >
+        </h1>
+        <p class="text-muted m-1">donated by</p>
+        <h3>
+          <b>{{ incomingDonation.name || "Anonymous benefactor" }}</b
+          >&emsp;
+          <small data-bs-toggle="tooltip" data-bs-placement="top" title="{{ incomingDonation.name}} is player #43" class="cursor-question">🛈</small>
+        </h3>
+        <p *ngIf="incomingDonation.message" class="text-muted m-1">
+          Who also left you a message
+        </p>
+        <quote
+          class="bg-light rounded-2 p-3 border m-2 d-inline-block"
+          *ngIf="incomingDonation.message"
+        >
+          {{ incomingDonation.message }}
+        </quote>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" (click)="state = status.PAUSED">
+          Start playing
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
