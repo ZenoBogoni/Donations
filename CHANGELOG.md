@@ -1,3 +1,8 @@
+## [2.7.0] - December 11, 2024
+
+### Changes
+- Release notes generated for version [2.7.0](.release-notes/2.7.0/release.md)
+
 ## [2.6.0] - December 8, 2024
 
 ### Changes
