@@ -21,7 +21,7 @@ export class GameComponent implements OnInit, AfterViewInit {
   observers = Math.round(Math.random() * 5);
   score = 0;
   scoreContainer: CountUp;
-  TOTAL_LIVES = 4;
+  TOTAL_LIVES = 6;
   life = new Array(this.TOTAL_LIVES).fill(0);
   internalState = +localStorage.getItem('state') || State.PRE;
   totalScore = 0;
@@ -44,6 +44,7 @@ export class GameComponent implements OnInit, AfterViewInit {
   currentMatch = 1;
   postSurvey: SurveyModel;
   preSurvey: SurveyModel;
+  TOTAL_MATCHES = 2;
 
   get state() {
     return this.internalState;
@@ -88,7 +89,7 @@ export class GameComponent implements OnInit, AfterViewInit {
       this.state = State.LEADERBOARD;
     });
 
-    this.http.get(SurveyService.getUrl('lastDonation')).subscribe((donation: Donation) => {
+    this.http.get(SurveyService.getUrl(`lastDonation${this.machineCode[0]}`)).subscribe((donation: Donation) => {
       this.incomingDonation = donation || this.incomingDonation;
     });
 
@@ -171,16 +172,17 @@ export class GameComponent implements OnInit, AfterViewInit {
     if (this.donation.amount > 0) {
       calls.push(
         this.http
-        .put(SurveyService.getUrl('lastDonation'), {...this.donation, amount: Math.min(5, this.donation.amount)})
+        .put(SurveyService.getUrl(`lastDonation${this.machineCode[0]}`), {...this.donation, amount: Math.min(5, this.donation.amount)})
       );
     }
     combineLatest(calls).subscribe(() => {
         this.currentMatch++;
-        if (this.currentMatch > 3) {
+        if (this.currentMatch > this.TOTAL_MATCHES) {
           this.state = State.POST;
         } else {
           this.life = new Array(this.donation.lives - this.donation.amount).fill(0);
-          this.state = State.PAUSED;
+          this.state = State.RECEIVING_DONATION;
+          this.setTooltip();
           this.score = 0;
           this.start();
         }

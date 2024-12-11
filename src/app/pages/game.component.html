@@ -14,7 +14,7 @@
   <canvas id="bg"></canvas>
   <canvas id="game"></canvas>
   <div class="position-fixed top-0 text-center w-100 row left-50">
-    <small class="col-12 bg-black">Match {{ currentMatch }} / 3</small>
+    <small class="col-12 bg-black">Match {{ currentMatch }} / {{TOTAL_MATCHES}}</small>
     <div class="col-6">
       <img
         src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
@@ -81,17 +81,17 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content text-center">
       <div class="modal-body">
-        <ng-container *ngIf="currentMatch >= 3">
+        <ng-container *ngIf="currentMatch >= TOTAL_MATCHES">
           <h3>
             Game completed
           </h3>
           <p>
             <strong>Congratulations!</strong><br>
-            You have completed all 3 matches. Your final score is <strong>{{ totalScore }}</strong>.<br>
+            You have completed all {{TOTAL_MATCHES}} matches. Your final score is <strong>{{ totalScore }}</strong>.<br>
             You will be able to see how high you ranked on our leaderboard, but first, we would like to ask you a few last questions post-experiment.
           </p>
         </ng-container>
-        <ng-container *ngIf="currentMatch < 3">
+        <ng-container *ngIf="currentMatch < TOTAL_MATCHES">
           <img
             src="https://cdn-icons-gif.flaticon.com/14118/14118602.gif"
             width="80"
@@ -182,14 +182,14 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content text-center">
       <div class="modal-body mb-2">
-        <p>You are about to start the first of 3 matches.<br /></p>
+        <p>You are about to start the first of {{TOTAL_MATCHES}} matches.<br /></p>
         <h1>
           <img
             src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
             width="50"
             class="to-yellow"
           />
-          <span>{{ TOTAL_LIVES - incomingDonation.amount }} lives</span>
+          <span>{{ TOTAL_LIVES }} lives</span>
         </h1>
         <p>Lives are useful to continue playing and reach higher scores.</p>
       </div>
@@ -197,7 +197,7 @@
         <button
           type="button"
           class="btn"
-          (click)="state = status.RECEIVING_DONATION; setTooltip()"
+          (click)="state = status.PAUSED;"
         >
           Next
         </button>
@@ -218,7 +218,7 @@
     <div class="modal-content text-center">
       <div class="modal-body">
         <p>
-          You are about to start the first of 3 matches.<br />
+          You are about to start the first of {{TOTAL_MATCHES}} matches.<br />
           <b>
             A benefactor has donated
             <span class="text-primary">{{ incomingDonation.amount }}</span>
@@ -254,8 +254,8 @@
         </quote>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn" (click)="state = status.PAUSED">
-          Start playing
+        <button type="button" class="btn" (click)="state = status.PAUSED; life = life + incomingDonation.amount">
+          Continue playing
         </button>
       </div>
     </div>
@@ -276,12 +276,12 @@
         <hr>
         <p class="text-left">
           <b>How to play</b><br>
-          You will now request to play a version of the classic game Pong for just 3 matches.<br>
+          You will now request to play a version of the classic game Pong for just {{TOTAL_MATCHES}} matches.<br>
           Your task is to move the paddle up and down to keep the ball in play by using <kbd>↑</kbd> and <kbd>↓</kbd> or <kbd>W</kbd> and <kbd>S</kbd>.<br>
           Miss the ball, and you’ll lose a life (❤️). If you lose all your lives, the match ends.<br>
           <b>After each match</b><br>
           At the end of each round, the points you gained in the match will turn into lives for the next match.<br>
-          There are a total of 3 matches. After the first two matches, you can decide whether to keep all the gained lives and use them in the following match or to share them with other players.<br>
+          There are a total of {{TOTAL_MATCHES}} matches. After the first two matches, you can decide whether to keep all the gained lives and use them in the following match or to share them with other players.<br>
           <b>Conclusion</b><br>
 
           At the end of the third match, you will be able to see how high you ranked on our leaderboard.
