@@ -23,7 +23,6 @@ import { GameComponent } from "./pages/game.component";
   declarations: [
     AppComponent,
     SurveyComponent,
-    SurveyPage,
     SurveyAnalyticsComponent,
     SurveyAnalyticsDatatablesComponent,
     SurveyAnalyticsTabulatorComponent,

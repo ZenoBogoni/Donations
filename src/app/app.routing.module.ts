@@ -8,11 +8,10 @@ import { GameComponent } from "./pages/game.component";
 
 
 const routes: Routes = [
-  { path: "", component: SurveyPage },
   { path: "analytics", component: AnalyticsPage },
   { path: "analyticstabulator", component: AnalyticsTabulatorPage},
   { path: "pdfexport", component: PdfExportPage },
-  { path: "game", component: GameComponent}
+  { path: "", component: GameComponent}
 ];
 
 @NgModule({
