@@ -22,7 +22,6 @@ export class GameService {
     const bg = document.getElementById("bg") as any;
     bg.width = width;
     bg.height = height;
-    let scoreId = null;
 
     const bCtx = bg.getContext("2d");
 
@@ -93,36 +92,26 @@ export class GameService {
       ctx.fillRect(this.x, this.y, this.w, this.h);
     };
 
-    const paddle = new Rect(10, 170, 10, 60);
-    const ai = new Rect(width - 10 - 20, 170, 10, 60);
+    const paddle = new Rect(10, 170, 10, 50);
+/*     const ai = new Rect(width - 10 - 20, 170, 10, 60); */
 
     // circle
     const ball = new Rect(width / 2, height / 2, 10, 10);
     ball.draw = function () {
+      ctx.fillStyle = "#fff";
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.w, 0, Math.PI * 2);
       ctx.fill();
     };
-    ball.dx = 1;
+    ball.dx = -0.5;
+    ball.dy = 0.5;
+
 
     const framerate = 1000 / 40;
     let id;
 
     function listener(e) {
-      if (e.type === "keydown") {
-        if (e.keyCode === 38) {
-          paddle.dy = -1;
-        }
-        if (e.keyCode === 40) {
-          paddle.dy = 1;
-        }
-      }
-      /*
-        if (id == null) {
-            id = setInterval(loop, framerate);
-        } else {
-            paddle.dy *= -1;
-        } */
+      paddle.y = e.clientY - canvas.getBoundingClientRect().top - 2 * paddle.h;
     }
 
     if (
@@ -130,19 +119,10 @@ export class GameService {
         /(Android|webOs|iPhone|iPad|BlackBerry|Windows Phone)/i
       )
     ) {
-      canvas.ontouchstart = listener;
+      canvas.ontouch = listener;
     } else {
-      document.onkeydown = listener;
+      document.onmousemove = listener;
       canvas.onclick = () => {
-        scoreId = setInterval(() => {
-          if (this.state === State.PLAYING) {
-            this.score += 10;
-            this.scoreContainer.update(this.score);
-
-          }
-
-
-        }, 500);
         if (id == null) {
           id = setInterval(loop, framerate);
         }
@@ -153,45 +133,39 @@ export class GameService {
     const that = this;
 
     function loop() {
-      paddle.move(4);
       paddle.border();
 
       if (ball.AABB(paddle)) {
         that.score += Math.round(Math.random() * 500);
+        that.scoreContainer.update(that.score);
         that.audios['win'].play();
-        ball.dx = 1;
-      }
-      if (ball.AABB(ai)) {
-        that.audios['click'].play();
-        ball.dx = -1;
+        ball.dx = Math.abs(ball.dx) + 0.1;
+        ball.dy += ball.dy > 0 ? 0.1 : -0.1;
+
+        ball.move(4);
+        const ball_bounce_dx = ball.bounce();
+        ball.border();
+        return;
       }
       ball.move(4);
       const ball_bounce_dx = ball.bounce();
       ball.border();
 
+      console.log(ball_bounce_dx);
       if (ball_bounce_dx === 1) {
-      } else if (ball_bounce_dx === -1) {
+        that.audios['click'].play();
+
+      } else if (ball_bounce_dx < 0) {
         that.audios['hit'].play();
         that.life.pop();
         if (that.life.length === 0) {
           clearInterval(id);
-          clearInterval(scoreId);
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           that.gameOver();
         }
       } else {
 
       }
-
-      if (ai.y > ball.y + ball.h) {
-        ai.dy = -1;
-      }
-      if (ai.y + ai.height < ball.y) {
-        ai.dy = 1;
-      }
-      ai.move(4);
-      ai.bounce();
-      ai.border();
 
       draw();
     }
@@ -200,13 +174,13 @@ export class GameService {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = "#aadd00";
       paddle.draw();
-      ai.draw();
+      /* ai.draw(); */
       ball.draw();
     }
 
     draw();
     ctx.globalAlpha = 0.6;
-    ctx.font = "12px Monospace";
+    ctx.font = "12px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     ctx.fillStyle = "#000";
@@ -214,10 +188,5 @@ export class GameService {
     ctx.globalAlpha = 1;
     ctx.fillStyle = "#fff";
     ctx.fillText("Click to play", width / 2, (height * 3) / 4);
-    ctx.fillText(
-      "Use W/S or UP/DOWN\nto change direction",
-      width / 2,
-      (height * 3) / 4 + 22
-    );
   }
 }
