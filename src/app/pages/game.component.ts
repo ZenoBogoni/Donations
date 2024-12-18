@@ -229,9 +229,15 @@ export class GameComponent implements OnInit, AfterViewInit {
    */
   getLeaderboard() {
     this.http.get(SurveyService.getUrl("")).subscribe((data: any) => {
-      this.leaderboard = (Object.values(data) as any[]).filter(
-        (e) => e.totalScore
-      );
+      this.leaderboard = [];
+      for (const key in data) {
+        if (!data[key].totalScore) {
+          continue;
+        }
+        if (key[0] === this.machineCode[0]) {
+          this.leaderboard.push(data[key]);
+        }
+      }
       this.leaderboard.push({
         totalScore: this.totalScore,
         name: "You",
