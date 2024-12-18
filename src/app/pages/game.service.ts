@@ -119,7 +119,7 @@ export class GameService {
         /(Android|webOs|iPhone|iPad|BlackBerry|Windows Phone)/i
       )
     ) {
-      canvas.ontouch = listener;
+      canvas.ontouchmove = listener;
 
     } else {
       document.onmousemove = listener;
