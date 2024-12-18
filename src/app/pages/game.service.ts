@@ -138,14 +138,13 @@ export class GameService {
       paddle.border();
 
       if (ball.AABB(paddle)) {
-        that.score += Math.round(Math.random() * 500);
+        that.score += Math.round(ball.dx * 500);
         that.scoreContainer.update(that.score);
         that.audios['win'].play();
         ball.dx = Math.abs(ball.dx) + 0.1;
         ball.dy += ball.dy > 0 ? 0.1 : -0.1;
 
         ball.move(4);
-        const ball_bounce_dx = ball.bounce();
         ball.border();
         return;
       }
