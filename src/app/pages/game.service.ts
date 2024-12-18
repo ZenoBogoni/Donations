@@ -120,17 +120,17 @@ export class GameService {
       )
     ) {
       canvas.ontouch = listener;
+
     } else {
       document.onmousemove = listener;
       // for touch
-      canvas.ontouchmove = listener;
-      canvas.onclick = () => {
-        if (id == null) {
-          id = setInterval(loop, framerate);
-        }
-        this.state = State.PLAYING;
-      };
     }
+    canvas.onclick = () => {
+      if (id == null) {
+        id = setInterval(loop, framerate);
+      }
+      this.state = State.PLAYING;
+    };
 
     const that = this;
 
