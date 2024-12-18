@@ -243,6 +243,14 @@ export class GameComponent implements OnInit, AfterViewInit {
     });
   }
 
+  max(a, b) {
+    return Math.max(a, b);
+  }
+
+  min(a, b) {
+    return Math.min(a, b);
+  }
+
   /**
    * Metodo chiamato dopo l'inizializzazione della vista.
    * @returns {void}
@@ -308,6 +316,14 @@ export class GameComponent implements OnInit, AfterViewInit {
         return new bootstrap.Tooltip(tooltipTriggerEl);
       });
     }, 500);
+  }
+
+  incrementAfterDonation() {
+    this.donation.lives += +this.incomingDonation.amount || 0;
+    this.state = State.PAUSED;
+    this.life = new Array(this.donation.lives).fill(
+      0
+    );
   }
 
   /**

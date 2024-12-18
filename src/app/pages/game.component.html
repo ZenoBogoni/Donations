@@ -162,7 +162,7 @@
             class="pop"
             src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
             width="30"
-            (click)="donation.amount = Math.max(idx + 1, donation.lives - 1)"
+            (click)="donation.amount = max(idx + 1, donation.lives - 1)"
             class="to-yellow"
           />
           <p>
@@ -172,8 +172,8 @@
             <strong>{{ donation.lives - donation.amount }}</strong> lives for
             myself
           </p>
-          <div class="numberstyle-qty justify-content-center w-auto m-auto">
-            <div class="qty-btn qty-rem disabled" (click)="donation.amount = Math.max(donation.amount - 1, 0)">-</div>
+          <div class="numberstyle-qty justify-content-center w-auto m-auto d-flex justify-content-center">
+            <div class="qty-btn qty-rem disabled" (click)="donation.amount = max(donation.amount - 1, 0)">-</div>
             <input
               class="numberstyle"
               type="number"
@@ -183,7 +183,7 @@
               max="{{ donation.lives - 1 }}"
               value="1"
             />
-            <div class="qty-btn qty-add" (click)="donation.amount = Math.max(donation.amount + 1, donation.lives - 1)">+</div>
+            <div class="qty-btn qty-add" (click)="donation.amount = min(donation.amount + 1, donation.lives - 1)">+</div>
           </div>
           <ng-container *ngIf="machineCode[0] === '1'">
             <h3>Be recognized as a benefactor</h3>
@@ -297,10 +297,7 @@
         <button
           type="button"
           class="btn"
-          (click)="
-            state = status.PAUSED;
-            donation.lives = donation.lives + incomingDonation.amount
-          "
+          (click)="incrementAfterDonation()"
         >
           Continue playing
         </button>
