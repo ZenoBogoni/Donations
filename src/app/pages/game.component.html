@@ -205,7 +205,7 @@
         </ng-container>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn" (click)="next()">Next match</button>
+        <button type="button" class="btn" (click)="next()">{{currentMatch >= TOTAL_MATCHES ? 'Go to final survey' : 'Next match'}}</button>
       </div>
     </div>
   </div>
