@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { GameComponent, State } from "./game.component";
 import { CountUp } from "countup.js";
+import { Console } from "node:console";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,11 @@ export class GameService {
 
     const width = 300;
     const height = 400;
+
+    const ballWidth = 10;
+    const ballHeight = 10;
+
+    const ballVelocity = 4;
 
     canvas.width = width;
     canvas.height = height;
@@ -62,27 +68,33 @@ export class GameService {
     };
     Rect.prototype.bounce = function () {
       let dx = 0;
-      if (this.y < 10 || this.y > height - this.h - 10) {
+
+      if (this.y < this.h || this.y > height - this.h) {
         this.dy *= -1;
       }
-      if (this.x < 10 || this.x > width - this.w - 10) {
+      if (this.x < this.w|| this.x > width - this.w) {
         dx = this.dx;
         this.dx *= -1;
       }
       return dx;
     };
     Rect.prototype.border = function () {
-      this.x = Math.min(Math.max(10, this.x), width - this.w - 10);
-      this.y = Math.min(Math.max(10, this.y), height - this.h - 10);
+      this.x = Math.min(Math.max(0, this.x), width - this.w);
+      this.y = Math.min(Math.max(0, this.y), height - this.h);
     };
     Rect.prototype.AABB = function (rect) {
-      return (
-        this.x < rect.x + rect.w &&
-        this.x + this.w > rect.x &&
-        this.y < rect.y + rect.h &&
-        this.y + this.h > rect.y
-      );
+      let dVectorLen = Math.sqrt(Math.pow(this.dx, 2) + Math.pow(this.dy, 2));
+      let dxCos = Math.abs(this.dx / dVectorLen);
+      let dySin = Math.abs(this.dy / dVectorLen);
+
+        return (
+          this.x - dxCos * this.w < rect.x + rect.w &&
+          this.y + dySin * this.h > rect.y &&
+          this.y - dySin * this.h < rect.y + rect.h &&
+          this.dx < 0 // ignore ball after bounce on the wall
+        );
     };
+
     Rect.prototype.draw = function () {
       if (this === paddle) {
         ctx.fillStyle = "#ffd84d";
@@ -96,7 +108,7 @@ export class GameService {
 /*     const ai = new Rect(width - 10 - 20, 170, 10, 60); */
 
     // circle
-    const ball = new Rect(width / 2, height / 2, 10, 10);
+    const ball = new Rect(width / 2, height / 2, ballWidth, ballHeight);
     ball.draw = function () {
       ctx.fillStyle = "#fff";
       ctx.beginPath();
@@ -107,7 +119,7 @@ export class GameService {
     ball.dy = 0.5;
 
 
-    const framerate = 1000 / 40;
+    const frametime = 1000 / 60;
     let id;
 
     function listener(e) {
@@ -124,7 +136,7 @@ export class GameService {
       document.onmousemove = listener;
       canvas.onclick = () => {
         if (id == null) {
-          id = setInterval(loop, framerate);
+          id = setInterval(loop, frametime);
         }
         this.state = State.PLAYING;
       };
@@ -136,22 +148,23 @@ export class GameService {
       paddle.border();
 
       if (ball.AABB(paddle)) {
-        that.score += Math.round(Math.random() * 500);
-        that.scoreContainer.update(that.score);
         that.audios['win'].play();
+        that.score += Math.round(Math.abs(ball.dx) * 200);
+        that.scoreContainer.update(that.score);
         ball.dx = Math.abs(ball.dx) + 0.1;
         ball.dy += ball.dy > 0 ? 0.1 : -0.1;
 
-        ball.move(4);
+
+        ball.move(ballVelocity);
         const ball_bounce_dx = ball.bounce();
         ball.border();
         return;
       }
-      ball.move(4);
+      ball.move(ballVelocity);
       const ball_bounce_dx = ball.bounce();
       ball.border();
 
-      console.log(ball_bounce_dx);
+      // console.log(ball_bounce_dx);
       if (ball_bounce_dx === 1) {
         that.audios['click'].play();
 
