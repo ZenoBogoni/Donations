@@ -131,16 +131,18 @@ export class GameService {
         /(Android|webOs|iPhone|iPad|BlackBerry|Windows Phone)/i
       )
     ) {
-      canvas.ontouch = listener;
+      canvas.ontouchmove = listener;
+
     } else {
       document.onmousemove = listener;
-      canvas.onclick = () => {
-        if (id == null) {
-          id = setInterval(loop, frametime);
-        }
-        this.state = State.PLAYING;
-      };
+      // for touch
     }
+    canvas.onclick = () => {
+      if (id == null) {
+        id = setInterval(loop, frametime);
+      }
+      this.state = State.PLAYING;
+    };
 
     const that = this;
 
