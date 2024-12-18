@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { GameComponent, State } from "./game.component";
 import { CountUp } from "countup.js";
-import { Console } from "node:console";
 
 @Injectable({
   providedIn: 'root'
