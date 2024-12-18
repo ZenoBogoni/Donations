@@ -55,35 +55,39 @@
     <hr />
   </div>
   <h5 class="col-12 row">
-    <b class="col-4">Player</b>
-    <b class="col-4">Score</b>
-    <b class="col-4">Donation</b>
+    <b class="col-3">Player</b>
+    <b class="col-3">Score</b>
+    <b class="col-3">Donation</b>
+    <b class="col-3" *ngIf="machineCode[0] === '1'">Message</b>
   </h5>
   <div
     class="col-12 leaderrow"
     *ngFor="let row of leaderboard; let idx = index"
   >
-    <div class="row p-2" [class.alert-warning]="row.me" [class.alert]="row.me">
-      <div class="col-12 col-md-6 col-lg-4">
+    <div class="row p-2" [class.border-warning]="row.me" [class.alert]="row.me">
+      <div class="col-12 col-md-6 col-lg-3">
         #{{ idx + 1 }}&emsp;{{
           row.donation1?.name || row?.name || "Anonymous"
         }}
       </div>
-      <div class="col-12 col-md-3 col-lg-4">
+      <div class="col-12 col-md-3 col-lg-3">
         <img
-          src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+          src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
           width="20"
           style="filter: hue-rotate(45deg) invert(1); mix-blend-mode: lighten"
         />
         <span>{{ row.totalScore }}</span>
       </div>
-      <div class="col-12 col-md-3 col-lg-4">
+      <div class="col-12 col-md-3 col-lg-3">
         <img
           src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
           width="20"
           style="filter: hue-rotate(45deg) invert(1); mix-blend-mode: lighten"
         />
         <span>{{ row.donation1?.donation }}</span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-3">
+        <span>{{ row.donation1?.message }}</span>
       </div>
     </div>
   </div>
