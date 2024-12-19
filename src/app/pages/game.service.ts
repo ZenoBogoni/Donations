@@ -7,7 +7,7 @@ import { CountUp } from "countup.js";
 })
 export class GameService {
   start(this: GameComponent) {
-    this.scoreContainer = new CountUp('counter', this.score);
+    this.scoreContainer = new CountUp("counter", this.score);
     this.scoreContainer.update(this.score);
 
     const canvas = document.getElementById("game") as any,
@@ -15,14 +15,13 @@ export class GameService {
 
     const width = 300;
     const height = 400;
-
     const ballWidth = 10;
     const ballHeight = 10;
-
-    const ballVelocity = 4;
+    const ballVelocity = 150;
 
     canvas.width = width;
     canvas.height = height;
+
 
     const bg = document.getElementById("bg") as any;
     bg.width = width;
@@ -61,17 +60,14 @@ export class GameService {
       this.dx = 0;
       this.dy = 1;
     }
-    Rect.prototype.move = function (v) {
-      this.x += this.dx * v;
-      this.y += this.dy * v;
-    };
+
     Rect.prototype.bounce = function () {
       let dx = 0;
 
       if (this.y < this.h || this.y > height - this.h) {
         this.dy *= -1;
       }
-      if (this.x < this.w|| this.x > width - this.w) {
+      if (this.x < this.w || this.x > width - this.w) {
         dx = this.dx;
         this.dx *= -1;
       }
@@ -86,12 +82,12 @@ export class GameService {
       let dxCos = Math.abs(this.dx / dVectorLen);
       let dySin = Math.abs(this.dy / dVectorLen);
 
-        return (
-          this.x - dxCos * this.w < rect.x + rect.w &&
-          this.y + dySin * this.h > rect.y &&
-          this.y - dySin * this.h < rect.y + rect.h &&
-          this.dx < 0 // ignore ball after bounce on the wall
-        );
+      return (
+        this.x - dxCos * this.w < rect.x + rect.w &&
+        this.y + dySin * this.h > rect.y &&
+        this.y - dySin * this.h < rect.y + rect.h &&
+        this.dx < 0 // ignore ball after bounce on the wall
+      );
     };
 
     Rect.prototype.draw = function () {
@@ -103,10 +99,13 @@ export class GameService {
       ctx.fillRect(this.x, this.y, this.w, this.h);
     };
 
-    const paddle = new Rect(10, 170, 10, 50);
-/*     const ai = new Rect(width - 10 - 20, 170, 10, 60); */
+    Rect.prototype.update = function (v, dt) {
+      this.x += this.dx * v * dt;
+      this.y += this.dy * v * dt;
+    };
 
-    // circle
+    const paddle = new Rect(10, 170, 10, 50);
+
     const ball = new Rect(width / 2, height / 2, ballWidth, ballHeight);
     ball.draw = function () {
       ctx.fillStyle = "#fff";
@@ -118,70 +117,118 @@ export class GameService {
     ball.dy = 0.5;
 
 
-    const frametime = 1000 / 60;
-    let id;
+    let lastTime = 0;
+    let isRunning = false;
+    const input = new Input();
 
-    function listener(e) {
-      paddle.y = e.clientY - canvas.getBoundingClientRect().top - 2 * paddle.h;
+    function handleTouchMove(event) {
+      if(isRunning) {
+        event.preventDefault();
+      }
+
+      const touchPos = getTouchPos(canvas, event);
+      paddle.y = touchPos.y ;
     }
 
-    if (
-      navigator.userAgent.match(
-        /(Android|webOs|iPhone|iPad|BlackBerry|Windows Phone)/i
-      )
-    ) {
-      canvas.ontouchmove = listener;
+    function getTouchPos(canvas, touchEvent) {
+      const rect = canvas.getBoundingClientRect();
+      const supposedCanvasHeight = 350;
+      const realCanvasHeight = rect.bottom - rect.top;
+      const realPaddleHeight = paddle.h * (realCanvasHeight / supposedCanvasHeight);
+      const centerScale = realCanvasHeight/ (realCanvasHeight - realPaddleHeight);
+      const heightScale = supposedCanvasHeight / realCanvasHeight;
+      console.log("paddle " + paddle.h + " real " + realPaddleHeight)
+      return {
+        y: ((touchEvent.touches[0].clientY - rect.top) * centerScale - paddle.h)* heightScale,
+      };
+    }
 
-    } else {
-      document.onmousemove = listener;
-      // for touch
+    function handleMouseMove(event) {
+      const rect = canvas.getBoundingClientRect();
+      const supposedCanvasHeight = 350;
+      const realCanvasHeight = rect.bottom - rect.top;
+      const realPaddleHeight = paddle.h * (realCanvasHeight / supposedCanvasHeight);
+      const heightScale = supposedCanvasHeight / realCanvasHeight;
+      const centerScale = realCanvasHeight / (realCanvasHeight - realPaddleHeight);
+      const mouseY = event.clientY - rect.top; // Get mouse Y relative to canvas
+      console.log(realPaddleHeight)
+      paddle.y = ((mouseY * centerScale) - realPaddleHeight /2) * heightScale;
+    }
+
+    canvas.addEventListener("touchmove", handleTouchMove, false);
+    canvas.addEventListener("touchstart", handleTouchMove, false);
+    document.addEventListener("mousemove", handleMouseMove, false);
+
+    document.onkeydown = (e) => {
+      if(e.code === "Space" && !isRunning){
+        startGame()
+      }
+      this.state = State.PLAYING;
     }
     canvas.onclick = () => {
-      if (id == null) {
-        id = setInterval(loop, frametime);
+      if (!isRunning) {
+        startGame();
       }
       this.state = State.PLAYING;
     };
 
+    function startGame() {
+      isRunning = true;
+      lastTime = performance.now();
+      requestAnimationFrame(gameLoop);
+    }
     const that = this;
 
-    function loop() {
+    function gameLoop(currentTime) {
+      if (!isRunning) return;
+
+      const deltaTime = (currentTime - lastTime) / 1000;
+      lastTime = currentTime;
+      updateGame(deltaTime);
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function movePaddle(deltaTime) {
+      const action = input.getDirection();
+      if (action === "DOWN") {
+        paddle.y += deltaTime * 250;
+      } else if (action === "UP"){
+        paddle.y += deltaTime * -250;
+      }
+    }
+
+    function updateGame(deltaTime) {
+      movePaddle(deltaTime);
       paddle.border();
 
       if (ball.AABB(paddle)) {
-        that.audios['win'].play();
+        that.audios["win"].play();
         that.score += Math.round(Math.abs(ball.dx) * 200);
         that.scoreContainer.update(that.score);
         ball.dx = Math.abs(ball.dx) + 0.1;
         ball.dy += ball.dy > 0 ? 0.1 : -0.1;
 
-
-        ball.move(ballVelocity);
+        ball.update(ballVelocity, deltaTime);
         const ball_bounce_dx = ball.bounce();
         ball.border();
         return;
       }
-      ball.move(ballVelocity);
+      ball.update(ballVelocity, deltaTime);
       const ball_bounce_dx = ball.bounce();
       ball.border();
 
-      // console.log(ball_bounce_dx);
       if (ball_bounce_dx === 1) {
-        that.audios['click'].play();
-
+        that.audios["click"].play();
       } else if (ball_bounce_dx < 0) {
-        that.audios['hit'].play();
+        that.audios["hit"].play();
         that.life.pop();
         if (that.life.length === 0) {
-          clearInterval(id);
+          isRunning = false;
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           that.gameOver();
         }
-      } else {
-
       }
-
-      draw();
     }
 
     function draw() {
@@ -201,6 +248,48 @@ export class GameService {
     ctx.fillRect(20, (height * 3) / 4 - 10, 260, 60);
     ctx.globalAlpha = 1;
     ctx.fillStyle = "#fff";
-    ctx.fillText("Click to play", width / 2, (height * 3) / 4);
+    ctx.fillText("Press Space or click to play", width / 2, (height * 3) / 4);
+  }
+}
+
+class Input {
+  heldDirection: string[];
+  constructor() {
+
+    this.heldDirection = [];
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "ArrowUp" || e.code === "KeyW") {
+        this.OnArrowPressed("UP");
+      }
+      if (e.code === "ArrowDown" || e.code === "KeyS") {
+        this.OnArrowPressed("DOWN");
+      }
+    });
+    document.addEventListener("keyup", (e) => {
+      if (e.code === "ArrowUp" || e.code === "KeyW") {
+        this.OnArrowReleased("UP");
+      }
+      if (e.code === "ArrowDown" || e.code === "KeyS") {
+        this.OnArrowReleased("DOWN");
+      }
+    });
+  }
+
+  getDirection() {
+    return this.heldDirection[0];
+  }
+
+  OnArrowPressed(direction) {
+    if (this.heldDirection.indexOf(direction) === -1) {
+      this.heldDirection.unshift(direction);
+    }
+  }
+
+  OnArrowReleased(direction) {
+    const index = this.heldDirection.indexOf(direction);
+    if (index === -1) {
+      return;
+    }
+    this.heldDirection.splice(index, 1);
   }
 }
