@@ -153,13 +153,16 @@ export class GameService {
     document.addEventListener("mousemove", handleMouseMove, false);
 
     document.onkeydown = (e) => {
-      if(e.code === "Space" && !isRunning)
+      if(e.code === "Space" && !isRunning){
         startGame()
+      }
+      this.state = State.PLAYING;
     }
     canvas.onclick = () => {
       if (!isRunning) {
         startGame();
       }
+      this.state = State.PLAYING;
     };
 
 
@@ -186,7 +189,6 @@ export class GameService {
       isRunning = true; // Set the flag to true
       lastTime = performance.now(); // Initialize lastTime
       requestAnimationFrame(gameLoop); // Start the loop
-      this.state = State.PLAYING;
     }
     const that = this;
 
