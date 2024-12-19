@@ -15,16 +15,13 @@ export class GameService {
 
     const width = 300;
     const height = 400;
-
     const ballWidth = 10;
     const ballHeight = 10;
-
     const ballVelocity = 150;
 
     canvas.width = width;
     canvas.height = height;
-    let lastTime = 0; // Variable to store the last frame time
-    let isRunning = false; // Flag to control the game loop
+
 
     const bg = document.getElementById("bg") as any;
     bg.width = width;
@@ -108,9 +105,7 @@ export class GameService {
     };
 
     const paddle = new Rect(10, 170, 10, 50);
-    /*     const ai = new Rect(width - 10 - 20, 170, 10, 60); */
 
-    // circle
     const ball = new Rect(width / 2, height / 2, ballWidth, ballHeight);
     ball.draw = function () {
       ctx.fillStyle = "#fff";
@@ -122,30 +117,42 @@ export class GameService {
     ball.dy = 0.5;
 
 
+    let lastTime = 0;
+    let isRunning = false;
     const input = new Input();
 
     function handleTouchMove(event) {
       if(isRunning) {
         event.preventDefault();
       }
+
       const touchPos = getTouchPos(canvas, event);
-      paddle.y = touchPos.y
+      paddle.y = touchPos.y ;
     }
 
     function getTouchPos(canvas, touchEvent) {
       const rect = canvas.getBoundingClientRect();
-
+      const supposedCanvasHeight = 350;
+      const realCanvasHeight = rect.bottom - rect.top;
+      const realPaddleHeight = paddle.h * (realCanvasHeight / supposedCanvasHeight);
+      const centerScale = realCanvasHeight/ (realCanvasHeight - realPaddleHeight);
+      const heightScale = supposedCanvasHeight / realCanvasHeight;
+      console.log("paddle " + paddle.h + " real " + realPaddleHeight)
       return {
-        x: touchEvent.touches[0].clientX - rect.left,
-        y: touchEvent.touches[0].clientY - rect.top,
+        y: ((touchEvent.touches[0].clientY - rect.top) * centerScale - paddle.h)* heightScale,
       };
     }
 
     function handleMouseMove(event) {
       const rect = canvas.getBoundingClientRect();
-      const scale = (rect.bottom - rect.top) / (rect.bottom - rect.top - paddle.h);
+      const supposedCanvasHeight = 350;
+      const realCanvasHeight = rect.bottom - rect.top;
+      const realPaddleHeight = paddle.h * (realCanvasHeight / supposedCanvasHeight);
+      const heightScale = supposedCanvasHeight / realCanvasHeight;
+      const centerScale = realCanvasHeight / (realCanvasHeight - realPaddleHeight);
       const mouseY = event.clientY - rect.top; // Get mouse Y relative to canvas
-      paddle.y = mouseY * scale - paddle.h / 2;
+      console.log(realPaddleHeight)
+      paddle.y = ((mouseY * centerScale) - realPaddleHeight /2) * heightScale;
     }
 
     canvas.addEventListener("touchmove", handleTouchMove, false);
@@ -165,46 +172,20 @@ export class GameService {
       this.state = State.PLAYING;
     };
 
-
-    function draw() {
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = "#aadd00";
-      paddle.draw();
-      /* ai.draw(); */
-      ball.draw();
-    }
-
-    draw();
-    ctx.globalAlpha = 0.6;
-    ctx.font = "12px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    ctx.fillStyle = "#000";
-    ctx.fillRect(20, (height * 3) / 4 - 10, 260, 60);
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = "#fff";
-    ctx.fillText("Press Space or click to play", width / 2, (height * 3) / 4);
-
     function startGame() {
-      isRunning = true; // Set the flag to true
-      lastTime = performance.now(); // Initialize lastTime
-      requestAnimationFrame(gameLoop); // Start the loop
+      isRunning = true;
+      lastTime = performance.now();
+      requestAnimationFrame(gameLoop);
     }
     const that = this;
 
     function gameLoop(currentTime) {
       if (!isRunning) return;
-      // Calculate delta time
-      const deltaTime = (currentTime - lastTime) / 1000; // Convert milliseconds to seconds
-      lastTime = currentTime; // Update lastTime to the current frame time
 
-      // Update game objects using deltaTime
+      const deltaTime = (currentTime - lastTime) / 1000;
+      lastTime = currentTime;
       updateGame(deltaTime);
-
-      // Render the game
       draw();
-
-      // Request the next frame
       requestAnimationFrame(gameLoop);
     }
 
@@ -237,7 +218,6 @@ export class GameService {
       const ball_bounce_dx = ball.bounce();
       ball.border();
 
-      // console.log(ball_bounce_dx);
       if (ball_bounce_dx === 1) {
         that.audios["click"].play();
       } else if (ball_bounce_dx < 0) {
@@ -250,6 +230,25 @@ export class GameService {
         }
       }
     }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#aadd00";
+      paddle.draw();
+      /* ai.draw(); */
+      ball.draw();
+    }
+
+    draw();
+    ctx.globalAlpha = 0.6;
+    ctx.font = "12px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillStyle = "#000";
+    ctx.fillRect(20, (height * 3) / 4 - 10, 260, 60);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Press Space or click to play", width / 2, (height * 3) / 4);
   }
 }
 
