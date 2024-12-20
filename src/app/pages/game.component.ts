@@ -363,7 +363,8 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.life = new Array(this.donation.lives - this.donation.amount).fill(
           0
         );
-        this.state = State.RECEIVING_DONATION;
+        this.donation.lives = this.life.length;
+              this.state = State.RECEIVING_DONATION;
         this.setTooltip();
         this.score = 0;
         this.start();
