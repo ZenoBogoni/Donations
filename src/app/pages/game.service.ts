@@ -137,7 +137,6 @@ export class GameService {
       const realPaddleHeight = paddle.h * (realCanvasHeight / supposedCanvasHeight);
       const centerScale = realCanvasHeight/ (realCanvasHeight - realPaddleHeight);
       const heightScale = supposedCanvasHeight / realCanvasHeight;
-      console.log("paddle " + paddle.h + " real " + realPaddleHeight)
       return {
         y: ((touchEvent.touches[0].clientY - rect.top) * centerScale - paddle.h)* heightScale,
       };
@@ -146,12 +145,11 @@ export class GameService {
     function handleMouseMove(event) {
       const rect = canvas.getBoundingClientRect();
       const supposedCanvasHeight = 350;
-      const realCanvasHeight = rect.bottom - rect.top;
+      const realCanvasHeight = rect.bottom - rect.top; 
       const realPaddleHeight = paddle.h * (realCanvasHeight / supposedCanvasHeight);
       const heightScale = supposedCanvasHeight / realCanvasHeight;
       const centerScale = realCanvasHeight / (realCanvasHeight - realPaddleHeight);
-      const mouseY = event.clientY - rect.top; // Get mouse Y relative to canvas
-      console.log(realPaddleHeight)
+      const mouseY = event.clientY - rect.top; 
       paddle.y = ((mouseY * centerScale) - realPaddleHeight /2) * heightScale;
     }
 
@@ -192,9 +190,9 @@ export class GameService {
     function movePaddle(deltaTime) {
       const action = input.getDirection();
       if (action === "DOWN") {
-        paddle.y += deltaTime * 250;
+        paddle.y += deltaTime * 300;
       } else if (action === "UP"){
-        paddle.y += deltaTime * -250;
+        paddle.y += deltaTime * -300;
       }
     }
 
