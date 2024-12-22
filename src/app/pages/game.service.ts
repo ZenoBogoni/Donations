@@ -3,7 +3,7 @@ import { GameComponent, State } from "./game.component";
 import { CountUp } from "countup.js";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class GameService {
   start(this: GameComponent) {
@@ -21,7 +21,6 @@ export class GameService {
 
     canvas.width = width;
     canvas.height = height;
-
 
     const bg = document.getElementById("bg") as any;
     bg.width = width;
@@ -63,7 +62,7 @@ export class GameService {
 
     Rect.prototype.bounce = function () {
       let dx = 0;
-      console.log(this.y)
+      console.log(this.y);
       if (this.y < this.h) {
         this.dy = Math.abs(this.dy);
       } else if (this.y > height - this.h) {
@@ -83,9 +82,9 @@ export class GameService {
       this.y = Math.min(Math.max(0, this.y), height - this.h);
     };
     Rect.prototype.AABB = function (rect) {
-      let dVectorLen = Math.sqrt(Math.pow(this.dx, 2) + Math.pow(this.dy, 2));
-      let dxCos = Math.abs(this.dx / dVectorLen);
-      let dySin = Math.abs(this.dy / dVectorLen);
+      const dVectorLen = Math.sqrt(Math.pow(this.dx, 2) + Math.pow(this.dy, 2));
+      const dxCos = Math.abs(this.dx / dVectorLen);
+      const dySin = Math.abs(this.dy / dVectorLen);
 
       return (
         this.x - dxCos * this.w < rect.x + rect.w &&
@@ -121,41 +120,47 @@ export class GameService {
     ball.dx = -0.5;
     ball.dy = 0.5;
 
-
     let lastTime = 0;
     let isRunning = false;
     const input = new Input();
 
     function handleTouchMove(event) {
-      if(isRunning) {
+      if (isRunning) {
         event.preventDefault();
       }
 
       const touchPos = getTouchPos(canvas, event);
-      paddle.y = touchPos.y ;
+      paddle.y = touchPos.y;
     }
 
     function getTouchPos(canvas, touchEvent) {
       const rect = canvas.getBoundingClientRect();
       const supposedCanvasHeight = 350;
       const realCanvasHeight = rect.bottom - rect.top;
-      const realPaddleHeight = paddle.h * (realCanvasHeight / supposedCanvasHeight);
-      const centerScale = realCanvasHeight/ (realCanvasHeight - realPaddleHeight);
+      const realPaddleHeight =
+        paddle.h * (realCanvasHeight / supposedCanvasHeight);
+      const centerScale =
+        realCanvasHeight / (realCanvasHeight - realPaddleHeight);
       const heightScale = supposedCanvasHeight / realCanvasHeight;
       return {
-        y: ((touchEvent.touches[0].clientY - rect.top) * centerScale - paddle.h)* heightScale,
+        y:
+          ((touchEvent.touches[0].clientY - rect.top) * centerScale -
+            paddle.h) *
+          heightScale,
       };
     }
 
     function handleMouseMove(event) {
       const rect = canvas.getBoundingClientRect();
       const supposedCanvasHeight = 350;
-      const realCanvasHeight = rect.bottom - rect.top; 
-      const realPaddleHeight = paddle.h * (realCanvasHeight / supposedCanvasHeight);
+      const realCanvasHeight = rect.bottom - rect.top;
+      const realPaddleHeight =
+        paddle.h * (realCanvasHeight / supposedCanvasHeight);
       const heightScale = supposedCanvasHeight / realCanvasHeight;
-      const centerScale = realCanvasHeight / (realCanvasHeight - realPaddleHeight);
-      const mouseY = event.clientY - rect.top; 
-      paddle.y = ((mouseY * centerScale) - realPaddleHeight /2) * heightScale;
+      const centerScale =
+        realCanvasHeight / (realCanvasHeight - realPaddleHeight);
+      const mouseY = event.clientY - rect.top;
+      paddle.y = (mouseY * centerScale - realPaddleHeight / 2) * heightScale;
     }
 
     canvas.addEventListener("touchmove", handleTouchMove, false);
@@ -163,11 +168,11 @@ export class GameService {
     document.addEventListener("mousemove", handleMouseMove, false);
 
     document.onkeydown = (e) => {
-      if(e.code === "Space" && !isRunning){
+      if (e.code === "Space" && !isRunning) {
         this.state = State.PLAYING;
-        startGame()
+        startGame();
       }
-    }
+    };
     canvas.onclick = () => {
       if (!isRunning) {
         this.state = State.PLAYING;
@@ -183,7 +188,7 @@ export class GameService {
     const that = this;
 
     function gameLoop(currentTime) {
-      if (!isRunning) return;
+      if (!isRunning) { return; }
 
       const deltaTime = (currentTime - lastTime) / 1000;
       lastTime = currentTime;
@@ -196,7 +201,7 @@ export class GameService {
       const action = input.getDirection();
       if (action === "DOWN") {
         paddle.y += deltaTime * 300;
-      } else if (action === "UP"){
+      } else if (action === "UP") {
         paddle.y += deltaTime * -300;
       }
     }
@@ -213,7 +218,7 @@ export class GameService {
         ball.dy += ball.dy > 0 ? 0.1 : -0.1;
 
         ball.update(ballVelocity, deltaTime);
-        const ball_bounce_dx = ball.bounce();
+        ball.bounce();
         ball.border();
         return;
       }
@@ -258,7 +263,6 @@ export class GameService {
 class Input {
   heldDirection: string[];
   constructor() {
-
     this.heldDirection = [];
     document.addEventListener("keydown", (e) => {
       if (e.code === "ArrowUp" || e.code === "KeyW") {
