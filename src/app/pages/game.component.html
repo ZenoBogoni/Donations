@@ -312,31 +312,87 @@
   role="dialog"
   *ngIf="state === status.TUTORIAL"
 >
-  <div class="modal-dialog" role="document">
-    <div class="modal-content text-center">
-      <div class="modal-body">
-        <h3>Some instructions...</h3>
-        <hr />
-        <p class="text-left">
-          <b>How to play</b><br />
-          You will now request to play a version of the classic game Pong for
-          just {{ TOTAL_MATCHES }} matches.<br />
-          Your task is to move the paddle up and down to keep the ball in play
-          by using <kbd>↑</kbd> and <kbd>↓</kbd> or <kbd>W</kbd> and
-          <kbd>S</kbd>.<br />
-          Miss the ball, and you’ll lose a life (❤️). If you lose all your
-          lives, the match ends.<br />
-          <b>After each match</b><br />
-          At the end of each round, the points you gained in the match will turn
-          into lives for the next match.<br />
-          There are a total of {{ TOTAL_MATCHES }} matches. After the first two
-          matches, you can decide whether to keep all the gained lives and use
-          them in the following match or to share them with other players.<br />
-          <b>Conclusion</b><br />
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="instructions">
+        <div class="instructions-text">
+          <h3>How to Play</h3>
+          <hr />
+          <p style="margin-bottom: 0px;">
+            Prepare to play <b>2 matches</b> of a simplified version of the
+            classic game <b>Pong</b>. Your goal is to control the
+            <b>yellow paddle</b> and keep the ball in play.<br />
+            <b>Move the paddle: </b>
+          </p>
+          <div class="grid-container">
+            <div>from your <b>computer</b> use</div>
+            <div class="items">
+              <p><kbd>↑</kbd> and <kbd>↓</kbd> ,</p>
+              <p><kbd>W</kbd> and <kbd>S</kbd> ,</p>
+              <p>your mouse;</p>
+            </div>
+          </div>
+          <p>
+            from your <b>phone</b> use your finger on the touchscreen.<br />
+          </p>
 
-          At the end of the third match, you will be able to see how high you
-          ranked on our leaderboard.
-        </p>
+          <p>
+            <b>Lives </b>
+            <img
+              src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+              width="20"
+              style="filter: hue-rotate(200deg)"
+              alt="Lives Icon"
+            />: Missing the ball costs you a life. Lose all your lives, and the
+            match ends.
+          </p>
+          <p>
+            <b>Points </b>
+            <img
+              src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
+              width="20"
+              style="filter: hue-rotate(200deg)"
+              alt="Points Icon"
+            />: The longer you play, the more points you earn. Your total score
+            is the sum of points across both matches.
+          </p>
+
+          <p>
+            <b>First Match:</b> At the end of the first match, your points will
+            turn into new lives ( 100
+            <img
+              src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
+              width="20"
+              style="filter: hue-rotate(200deg)"
+              alt="Points Icon"
+            />
+            = 1
+            <img
+              src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+              width="20"
+              style="filter: hue-rotate(200deg)"
+              alt="Lives Icon"
+            />) <br />
+            You can decide whether to keep all the lives for the next match or
+            share some with other players. After that, you will eventually
+            receive lives donated by others. These will sum up to the available
+            lives for the second match.
+          </p>
+
+          <p>
+            <b>Second Match:</b> Points earned in the second (and last) match
+            will not turn into lives. They will directly contribute to your
+            total score.
+          </p>
+
+          <p>
+            <b>Conclusion:</b> After the second match, your total score
+            determines your ranking on the leaderboard.
+          </p>
+        </div>
+        <div class="instructions-image">
+          <img src="/assets/pong_UI.jpg" alt="Game Preview" />
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn" (click)="state = status.WAITING">

@@ -130,6 +130,45 @@ kbd {
 
 }
 
+.modal-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+}
+
+.instructions {
+  display: flex;
+  gap: 20px; /* Space between text and image */
+}
+
+.instructions-text {
+  flex: 1.5;
+  text-align: left;
+}
+
+.instructions-image {
+  flex: 1;
+  margin: auto;
+  }
+
+.instructions-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px; /* Optional: Makes the image look nicer */
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: auto 1fr; /* Two columns: auto-sized label and flexible content */
+  gap: 10px; /* Space between columns */
+  align-items: start; /* Align items to the top of the grid row */
+}
+
+
+.items p {
+  margin: 0; /* Remove default margin for clean alignment */
+}
 
 /*
   *  Input
