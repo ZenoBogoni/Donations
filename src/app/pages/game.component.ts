@@ -47,7 +47,7 @@ export class GameComponent implements OnInit, AfterViewInit {
    * Numero totale di vite.
    * @type {number}
    */
-  TOTAL_LIVES = 6;
+  TOTAL_LIVES = 1;
   /**
    * Array delle vite.
    * @type {number[]}
@@ -231,18 +231,25 @@ export class GameComponent implements OnInit, AfterViewInit {
     this.http.get(SurveyService.getUrl("")).subscribe((data: any) => {
       this.leaderboard = [];
       for (const key in data) {
-        if (!data[key].totalScore) {
+        if (!(data[key].totalScore >= 0)) {
           continue;
         }
         if (key[0] === this.machineCode[0]) {
+          data[key].machineCode = key;
           this.leaderboard.push(data[key]);
         }
       }
-      this.leaderboard.push({
-        totalScore: this.totalScore,
-        name: "You",
-        me: true,
-      });
+      const me = this.leaderboard.find((e) => e.machineCode === this.machineCode);
+      if (me) {
+        me.name = "You";
+        me.me = true;
+      } else {
+        this.leaderboard.push({
+          totalScore: this.totalScore,
+          name: "You",
+          me: true,
+        });
+      }
       this.leaderboard = this.leaderboard.sort(
         (a, b) => b.totalScore - a.totalScore
       );

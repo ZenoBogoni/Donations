@@ -167,12 +167,12 @@ export class GameService {
     canvas.addEventListener("touchstart", handleTouchMove, false);
     document.addEventListener("mousemove", handleMouseMove, false);
 
-    document.onkeydown = (e) => {
+/*     document.onkeydown = (e) => {
       if (e.code === "Space" && !isRunning) {
         this.state = State.PLAYING;
         startGame();
       }
-    };
+    }; */
     canvas.onclick = () => {
       if (!isRunning) {
         this.state = State.PLAYING;
