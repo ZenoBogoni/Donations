@@ -229,9 +229,15 @@ export class GameComponent implements OnInit, AfterViewInit {
    */
   getLeaderboard() {
     this.http.get(SurveyService.getUrl("")).subscribe((data: any) => {
-      this.leaderboard = (Object.values(data) as any[]).filter(
-        (e) => e.totalScore
-      );
+      this.leaderboard = [];
+      for (const key in data) {
+        if (!data[key].totalScore) {
+          continue;
+        }
+        if (key[0] === this.machineCode[0]) {
+          this.leaderboard.push(data[key]);
+        }
+      }
       this.leaderboard.push({
         totalScore: this.totalScore,
         name: "You",
@@ -241,6 +247,14 @@ export class GameComponent implements OnInit, AfterViewInit {
         (a, b) => b.totalScore - a.totalScore
       );
     });
+  }
+
+  max(a, b) {
+    return Math.max(a, b);
+  }
+
+  min(a, b) {
+    return Math.min(a, b);
   }
 
   /**
@@ -310,6 +324,14 @@ export class GameComponent implements OnInit, AfterViewInit {
     }, 500);
   }
 
+  incrementAfterDonation() {
+    this.donation.lives += +this.incomingDonation.amount || 0;
+    this.state = State.PAUSED;
+    this.life = new Array(this.donation.lives).fill(
+      0
+    );
+  }
+
   /**
    * Metodo per passare alla partita successiva.
    * @returns {void}
@@ -321,9 +343,7 @@ export class GameComponent implements OnInit, AfterViewInit {
           this.machineCode + "/donation" + this.currentMatch
         ),
         {
-          name: this.donation.name,
-          donation: this.donation.amount,
-          lives: this.donation.lives,
+          ...this.donation
         }
       ),
     ];
@@ -343,7 +363,8 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.life = new Array(this.donation.lives - this.donation.amount).fill(
           0
         );
-        this.state = State.RECEIVING_DONATION;
+        this.donation.lives = this.life.length;
+              this.state = State.RECEIVING_DONATION;
         this.setTooltip();
         this.score = 0;
         this.start();

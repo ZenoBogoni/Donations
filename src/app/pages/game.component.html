@@ -16,7 +16,7 @@
     <canvas id="bg"></canvas>
     <canvas id="game"></canvas>
     <div class="position-fixed top-0 text-center w-100 row left-50">
-      <small class="col-12 bg-black"
+      <small class="col-12"
         >Match {{ currentMatch }} / {{ TOTAL_MATCHES }}</small
       >
       <div class="col-6">
@@ -55,35 +55,39 @@
     <hr />
   </div>
   <h5 class="col-12 row">
-    <b class="col-4">Player</b>
-    <b class="col-4">Score</b>
-    <b class="col-4">Donation</b>
+    <b class="col-3">Player</b>
+    <b class="col-3">Score</b>
+    <b class="col-3">Donation</b>
+    <b class="col-3" *ngIf="machineCode[0] === '1'">Message</b>
   </h5>
   <div
     class="col-12 leaderrow"
     *ngFor="let row of leaderboard; let idx = index"
   >
-    <div class="row p-2" [class.alert-warning]="row.me" [class.alert]="row.me">
-      <div class="col-12 col-md-6 col-lg-4">
+    <div class="row p-2" [class.border-warning]="row.me" [class.alert]="row.me">
+      <div class="col-12 col-md-6 col-lg-3">
         #{{ idx + 1 }}&emsp;{{
           row.donation1?.name || row?.name || "Anonymous"
         }}
       </div>
-      <div class="col-12 col-md-3 col-lg-4">
+      <div class="col-12 col-md-3 col-lg-3">
         <img
-          src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+          src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
           width="20"
           style="filter: hue-rotate(45deg) invert(1); mix-blend-mode: lighten"
         />
         <span>{{ row.totalScore }}</span>
       </div>
-      <div class="col-12 col-md-3 col-lg-4">
+      <div class="col-12 col-md-3 col-lg-3">
         <img
           src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
           width="20"
           style="filter: hue-rotate(45deg) invert(1); mix-blend-mode: lighten"
         />
         <span>{{ row.donation1?.donation }}</span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-3">
+        <span>{{ row.donation1?.message }}</span>
       </div>
     </div>
   </div>
@@ -158,6 +162,7 @@
             class="pop"
             src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
             width="30"
+            (click)="donation.amount = min(idx + 1, donation.lives - 1)"
             class="to-yellow"
           />
           <p>
@@ -167,16 +172,19 @@
             <strong>{{ donation.lives - donation.amount }}</strong> lives for
             myself
           </p>
-          <input
-            type="range"
-            class="form-range d-block"
-            [(ngModel)]="donation.amount"
-            placeholder="How many lives?"
-            min="0"
-            max="{{ donation.lives - 1 }}"
-            step="1"
-            value="0"
-          />
+          <div class="numberstyle-qty justify-content-center w-auto m-auto d-flex justify-content-center">
+            <div class="qty-btn qty-rem" [class.disabled]="donation.amount == 0" (click)="donation.amount = max(donation.amount - 1, 0)">-</div>
+            <input
+              class="numberstyle"
+              type="number"
+              min="1"
+              step="1"
+              [(ngModel)]="donation.amount"
+              max="{{ donation.lives - 1 }}"
+              value="1"
+            />
+            <div class="qty-btn qty-add" [class.disabled]="donation.amount == donation.lives - 1" (click)="donation.amount = min(donation.amount + 1, donation.lives - 1)">+</div>
+          </div>
           <ng-container *ngIf="machineCode[0] === '1'">
             <h3>Be recognized as a benefactor</h3>
             <p class="alert alert-warning p-1 mt-2">
@@ -197,7 +205,7 @@
         </ng-container>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn" (click)="next()">Next match</button>
+        <button type="button" class="btn" (click)="next()">{{currentMatch >= TOTAL_MATCHES ? 'Go to final survey' : 'Next match'}}</button>
       </div>
     </div>
   </div>
@@ -289,10 +297,7 @@
         <button
           type="button"
           class="btn"
-          (click)="
-            state = status.PAUSED;
-            donation.lives = donation.lives + incomingDonation.amount
-          "
+          (click)="incrementAfterDonation()"
         >
           Continue playing
         </button>
