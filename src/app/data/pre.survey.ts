@@ -46,7 +46,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           name: "age_group",
           analytics: true,
           title: "Select your age group:",
-          isRequired: false,
+          isRequired: true,
           choices: [
             { value: "18_25", text: "18-25" },
             { value: "26_35", text: "26-35" },
@@ -61,7 +61,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           analytics: true,
 
           title: "What is your gender?",
-          isRequired: false,
+          isRequired: true,
           choices: [
             { value: "male", text: "Male" },
             { value: "female", text: "Female" },
@@ -73,7 +73,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           name: "education",
           analytics: true,
           title: "What is your highest level of education?",
-          isRequired: false,
+          isRequired: true,
           choices: [
             { value: "no_degree", text: "No degree" },
             { value: "high_school", text: "High School Diploma" },
@@ -88,7 +88,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           analytics: true,
 
           title: "What is your current employment status?",
-          isRequired: false,
+          isRequired: true,
           choices: [
             { value: "unemployed", text: "Unemployed" },
             { value: "student", text: "Student" },
