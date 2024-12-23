@@ -1,6 +1,6 @@
 export const PreSurvey = {
-  title: "Experiment on Financial Behavior",
-  description: "A study on financial decision-making.",
+  title: "Experiment on sharing behavior",
+  description: "A study on decision-making",
   logoPosition: "right",
   completedHtml: "<h3>Now start playing!</h3>",
   pages: [
@@ -15,7 +15,7 @@ export const PreSurvey = {
 Hello and welcome to our study! You’ll play a simple and fun game while helping us understand how people make decisions about sharing.
 
 <h6>Privacy and data sharing</h6>
-Some of the information collected during this questionnaire <b>may be shared publicly</b> in aggregated, anonymous or personally identifiable form for research purposes. The results will be used solely for academic purposes and published in compliance with deontological ethics.
+Some of the game choice you make <b>may be shared publicly</b> in aggregated, anonymous or personally identifiable form for research purposes. The results will be used solely for academic purposes and published in compliance with deontological ethics.
 
 <h6>Importance of your contribution</h6>
 Your input represents a valuable contribution to this study, helping us gather meaningful data that reflects diverse individual perspectives. Providing accurate and honest responses is crucial to ensuring the quality and reliability of the analyses derived from this research.

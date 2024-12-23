@@ -47,7 +47,7 @@ export class GameComponent implements OnInit, AfterViewInit {
    * Numero totale di vite.
    * @type {number}
    */
-  TOTAL_LIVES = 1;
+  TOTAL_LIVES = 5;
   /**
    * Array delle vite.
    * @type {number[]}
