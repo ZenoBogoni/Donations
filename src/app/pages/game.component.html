@@ -266,7 +266,12 @@
         </ng-container>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn" (click)="next()" [disabled]="!donation.name || !donation.message">
+        <button
+          type="button"
+          class="btn"
+          (click)="next()"
+          [disabled]="!donation.name || !donation.message"
+        >
           {{
             currentMatch >= TOTAL_MATCHES ? "Go to final survey" : "Next match"
           }}
@@ -456,15 +461,147 @@
           </p>
         </div>
         <div class="col-12 col-md-6">
-
-          <img src="assets/pong_UI.jpg" alt="Game Preview" class="w-100 rounded-3"/>
-
+          <img
+            src="assets/pong_UI.jpg"
+            alt="Game Preview"
+            class="w-100 rounded-3"
+          />
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn" (click)="state = status.WAITING">
+        <button
+          type="button"
+          class="btn"
+          (click)="state = status.UNDERSTANDING"
+        >
           I understand
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal text-dark"
+  tabindex="-1"
+  role="dialog"
+  *ngIf="state === status.UNDERSTANDING"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="row align-items-center">
+        <div class="col-12">
+          <div>
+            <div>
+              <div class="mb-4">
+              <h4> Are you ready to play?</h4>
+              <small>Answer all questions correctly to enable the <b>Play</b> button and start the game.</small>
+            </div>
+              <form>
+                <div class="mb-4">
+                <p>1. What happens if you miss the ball during the game?</p>
+                <label>
+                  <input
+                    type="radio"
+                    name="question1"
+                    [value]="'A'"
+                    [(ngModel)]="answers.q1"
+                  />
+                  A. You lose a life. </label
+                ><br />
+                <label>
+                  <input
+                    type="radio"
+                    name="question1"
+                    [value]="'B'"
+                    [(ngModel)]="answers.q1"
+                  />
+                  B. You lose the game immediately. </label
+                ><br />
+                <label>
+                  <input
+                    type="radio"
+                    name="question1"
+                    [value]="'C'"
+                    [(ngModel)]="answers.q1"
+                  />
+                  C. Nothing happens.
+                </label><br />
+              </div>
+              <div class="mb-4">
+                <p>2. How can you earn lives for the next match?</p>
+                <label>
+                  <input
+                    type="radio"
+                    name="question2"
+                    [value]="'A'"
+                    [(ngModel)]="answers.q2"
+                  />
+                  A. By donating lives. </label
+                ><br />
+                <label>
+                  <input
+                    type="radio"
+                    name="question2"
+                    [value]="'B'"
+                    [(ngModel)]="answers.q2"
+                  />
+                  B. By scoring points. </label
+                ><br />
+                <label>
+                  <input
+                    type="radio"
+                    name="question2"
+                    [value]="'C'"
+                    [(ngModel)]="answers.q2"
+                  />
+                  C. By asking another player.
+                </label>
+              </div>
+              <div class="mb-4">
+                <p>
+                  3. What are you allowed to do at the end of the second match?
+                </p>
+                <label>
+                  <input
+                    type="radio"
+                    name="question3"
+                    [value]="'A'"
+                    [(ngModel)]="answers.q3"
+                  />
+                  A. Donate lives to other players. </label
+                ><br />
+                <label>
+                  <input
+                    type="radio"
+                    name="question3"
+                    [value]="'B'"
+                    [(ngModel)]="answers.q3"
+                  />
+                  B. Play again. </label
+                ><br />
+                <label>
+                  <input
+                    type="radio"
+                    name="question3"
+                    [value]="'C'"
+                    [(ngModel)]="answers.q3"
+                  />
+                  C. See the scoreboard. </label
+                ></div>
+              </form>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn"
+                  (click)="state = status.WAITING"
+                  [disabled]="!areAllAnswersCorrect()"
+                >
+                  Play
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
