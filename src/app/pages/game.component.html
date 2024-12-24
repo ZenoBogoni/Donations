@@ -266,7 +266,7 @@
         </ng-container>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn" (click)="next()">
+        <button type="button" class="btn" (click)="next()" [disabled]="!donation.name || !donation.message">
           {{
             currentMatch >= TOTAL_MATCHES ? "Go to final survey" : "Next match"
           }}
