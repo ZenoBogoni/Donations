@@ -144,7 +144,6 @@ export const PostSurvey = {
           rateType: "smileys",
           name: "overall_evaluation",
           analytics: true,
-          isRequired:true,
           title: "How would you rate your overall experience with this experiment?",
         }
       ],
