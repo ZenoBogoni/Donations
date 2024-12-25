@@ -267,7 +267,11 @@ export class GameComponent implements OnInit, AfterViewInit {
       } else {
         this.leaderboard.push({
           totalScore: this.totalScore,
-          name: "You",
+          name: this.donation?.name,
+          donation1: {
+            amount: this.donation?.amount,
+            message: this.donation?.message
+          },
           me: true,
         });
       }
@@ -328,7 +332,7 @@ export class GameComponent implements OnInit, AfterViewInit {
     this.state = State.GAME_OVER;
     this.totalScore += this.score;
     this.donation.lives = 0;
-    this.donation.amount = 0;
+    //this.donation.amount = 0; 
     setTimeout(() => {
       const scoreDown = new CountUp("xp", 0, { startVal: this.score });
       const lifeUp = new CountUp("xpLife", 0);
