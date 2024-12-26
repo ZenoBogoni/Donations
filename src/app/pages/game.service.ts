@@ -212,7 +212,7 @@ export class GameService {
 
       if (ball.AABB(paddle)) {
         that.audios["win"].play();
-        that.score += Math.round(Math.abs(ball.dx) * 200);
+        that.score += Math.round(Math.abs(ball.dx) * 100);
         that.scoreContainer.update(that.score);
         ball.dx = Math.abs(ball.dx) + 0.1;
         ball.dy += ball.dy > 0 ? 0.1 : -0.1;
