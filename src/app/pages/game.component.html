@@ -270,7 +270,7 @@
           type="button"
           class="btn"
           (click)="next()"
-          [disabled]="!donation.name || !donation.message"
+          [disabled]="!(donation.name && donation.message) && machineCode[0] === '1'"
         >
           {{
             currentMatch >= TOTAL_MATCHES ? "Go to final survey" : "Next match"
