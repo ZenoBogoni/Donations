@@ -47,7 +47,7 @@ export class GameComponent implements OnInit, AfterViewInit {
    * Numero totale di vite.
    * @type {number}
    */
-  TOTAL_LIVES = 1;
+  TOTAL_LIVES = 5;
   /**
    * Array delle vite.
    * @type {number[]}
@@ -128,6 +128,27 @@ export class GameComponent implements OnInit, AfterViewInit {
    * Getter per lo stato del gioco.
    * @returns {number}
    */
+
+  answers = {
+    q1: null,
+    q2: null,
+    q3: null,
+  };
+
+  correctAnswers = {
+    q1: 'A',
+    q2: 'B',
+    q3: 'C',
+  };
+
+  areAllAnswersCorrect(): boolean {
+    return (
+      this.answers.q1 === this.correctAnswers.q1 &&
+      this.answers.q2 === this.correctAnswers.q2 &&
+      this.answers.q3 === this.correctAnswers.q3
+    );
+  }
+
   get state() {
     return this.internalState;
   }
@@ -246,7 +267,11 @@ export class GameComponent implements OnInit, AfterViewInit {
       } else {
         this.leaderboard.push({
           totalScore: this.totalScore,
-          name: "You",
+          name: this.donation?.name,
+          donation1: {
+            amount: this.donation?.amount,
+            message: this.donation?.message
+          },
           me: true,
         });
       }
@@ -284,7 +309,9 @@ export class GameComponent implements OnInit, AfterViewInit {
       this.getLeaderboard();
     } else if (this.state === State.TUTORIAL) {
       this.start();
-    }
+    } else if (this.state === State.UNDERSTANDING) {
+      this.start();
+    } 
   }
 
   /**
@@ -305,7 +332,7 @@ export class GameComponent implements OnInit, AfterViewInit {
     this.state = State.GAME_OVER;
     this.totalScore += this.score;
     this.donation.lives = 0;
-    this.donation.amount = 0;
+    //this.donation.amount = 0; 
     setTimeout(() => {
       const scoreDown = new CountUp("xp", 0, { startVal: this.score });
       const lifeUp = new CountUp("xpLife", 0);
@@ -407,6 +434,7 @@ export class State {
   static PRE = 6;
   static LEADERBOARD = 7;
   static TUTORIAL = 8;
+  static UNDERSTANDING = 9;
 }
 
 /**

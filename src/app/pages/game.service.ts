@@ -62,7 +62,7 @@ export class GameService {
 
     Rect.prototype.bounce = function () {
       let dx = 0;
-      console.log(this.y);
+      // console.log(this.y);
       if (this.y < this.h) {
         this.dy = Math.abs(this.dy);
       } else if (this.y > height - this.h) {
@@ -256,7 +256,7 @@ export class GameService {
     ctx.fillRect(20, (height * 3) / 4 - 10, 260, 60);
     ctx.globalAlpha = 1;
     ctx.fillStyle = "#fff";
-    ctx.fillText("Press Space or click to play", width / 2, (height * 3) / 4);
+    ctx.fillText("Click to play", width / 2, (height * 3) / 4);
   }
 }
 

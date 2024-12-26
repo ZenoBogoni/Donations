@@ -71,6 +71,7 @@ export const PostSurvey = {
       elements: [
         {
           analytics: true,
+          isRequired:true,
           type: "matrix",
           name: "post_survey",
           title: "How much do you agree with these statements?",
@@ -91,9 +92,13 @@ export const PostSurvey = {
               text: "I felt bad when I lost lives.",
             },
             {
+              value: "good_playing",
+              text: "I felt like I was good at the game.",
+            },
+            /* {
               value: "motivated_donate",
               text: "I felt more motivated to donate because I received lives from others.",
-            },
+            }, */
             {
               value: "good_donation_decisions",
               text: "I felt good about my donation decisions.",
@@ -106,6 +111,19 @@ export const PostSurvey = {
               value: "understood_donation_impact",
               text: "I understood how my donation would affect other players in the game.",
             },
+            {
+              value: "wtp",
+              text: "I would be willing to pay a small sum to play this game.",
+            },
+            {
+              value: "choices_myself",
+              text: "The choices I made tell me a lot about myself.",
+            },
+            {
+              value: "choices_inner_values",
+              text: "The choices I made reflect my inner goals and values",
+            },
+            
             /* {
               value: "privacy",
               text: "I am concerned about my privacy when sharing personal information online.",
