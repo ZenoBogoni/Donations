@@ -163,8 +163,8 @@ export class GameService {
       paddle.y = (mouseY * centerScale - realPaddleHeight / 2) * heightScale;
     }
 
-    document.addEventListener("touchmove", handleTouchMove, false);
-    canvas.addEventListener("touchstart", handleTouchMove, false);
+    document.addEventListener("touchmove", handleTouchMove, {passive: false});
+    canvas.addEventListener("touchstart", handleTouchMove, {passive: false});
     document.addEventListener("mousemove", handleMouseMove, false);
 
 /*     document.onkeydown = (e) => {
