@@ -4,7 +4,6 @@
  */
 
 import { Component } from "@angular/core";
-import * as X from "../data/survey2";
 import { HttpClient } from "@angular/common/http";
 import { SurveyService } from "./survey.service";
 import { AnalyticsService } from "./analytics.service";
@@ -36,7 +35,14 @@ export class AnalyticsPage {
   /**
    * Colori utilizzati nei grafici.
    */
-  colors = X.colors;
+  colors = [
+    "#FF6633",
+    "#FFB399",
+    "#FF33FF",
+    "#FFFF99",
+    "#00B3E6",
+    "#E6B333",
+  ]
 
   /**
    * Valore del filtro attuale.
@@ -47,11 +53,6 @@ export class AnalyticsPage {
    * Categoria selezionata per l'analisi.
    */
   selectedCategory = "donations";
-
-  /**
-   * Categorie disponibili per l'analisi.
-   */
-  categories = X.categories.map((e) => e.toLowerCase());
 
   /**
    * Istogramma dei dati.

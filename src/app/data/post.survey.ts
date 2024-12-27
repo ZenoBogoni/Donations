@@ -4,7 +4,6 @@ export const PostSurvey = {
   logoPosition: "right",
   completedHtml: "<h3>Thank you for participating in this experiment!</h3>",
   pages: [
-
     /* {
       name: "habits",
       title: "Habits and Preferences",
@@ -71,16 +70,16 @@ export const PostSurvey = {
       elements: [
         {
           analytics: true,
-          isRequired:true,
+          isRequired: true,
           type: "matrix",
           name: "post_survey",
-          title: "How much do you agree with these statements?",
+          title: "Please answer the following questions",
           columns: [
-            { value: 1, text: "Strongly disagree" },
-            { value: 2, text: "Disagree" },
+            { value: 1, text: "Definetly not" },
+            { value: 2, text: "Not much" },
             { value: 3, text: "Neutral" },
-            { value: 4, text: "Agree" },
-            { value: 5, text: "Strongly agree" },
+            { value: 4, text: "Yes" },
+            { value: 5, text: "Yes a lot" },
           ],
           rows: [
             {
@@ -111,19 +110,19 @@ export const PostSurvey = {
               value: "understood_donation_impact",
               text: "I understood how my donation would affect other players in the game.",
             },
-            {
+            /* {
               value: "wtp",
               text: "I would be willing to pay a small sum to play this game.",
-            },
+            }, */
             {
               value: "choices_myself",
               text: "The choices I made tell me a lot about myself.",
             },
-            {
+            /*             {
               value: "choices_inner_values",
               text: "The choices I made reflect my inner goals and values",
-            },
-            
+            }, */
+
             /* {
               value: "privacy",
               text: "I am concerned about my privacy when sharing personal information online.",
@@ -144,8 +143,9 @@ export const PostSurvey = {
           rateType: "smileys",
           name: "overall_evaluation",
           analytics: true,
-          title: "How would you rate your overall experience with this experiment?",
-        }
+          title:
+            "How would you rate your overall experience with this experiment?",
+        },
       ],
     },
   ],
