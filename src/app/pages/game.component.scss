@@ -6,6 +6,23 @@ body {
   background: #111;
 }
 
+#dragArea {
+  height: 200px;
+  width: 50px;
+  background: #fff3;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex
+;
+  align-items: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-align: center;
+  justify-content: center;
+  font-size: small;
+}
+
 #view {
   width: 300px;
   height: 400px;
@@ -19,9 +36,16 @@ body {
   transform: translate(-50%, -50%);
 }
 
+html,
+body {
+    overscroll-behavior-y: contain;
+}
+
 #view canvas {
   position: absolute;
   border: 2px solid #fff;
+  border-left-color: #f81630;
+  border-left-style: dashed;
   top: 0;
   left: 0;
 }

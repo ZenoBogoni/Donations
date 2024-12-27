@@ -6,7 +6,6 @@ import { HttpClientModule } from "@angular/common/http";
 import { AppRoutingModule } from "./app.routing.module";
 import { AppComponent } from "./app.component";
 import { SurveyComponent } from "./components/survey.component";
-import { SurveyPage } from "./pages/survey.page";
 import { SurveyAnalyticsComponent } from "./components/survey.analytics.component";
 import { SurveyAnalyticsTabulatorComponent } from "./components/survey.analytics.tabulator";
 import { SurveyAnalyticsDatatablesComponent } from "./components/survey.analytics.datatables";
@@ -14,7 +13,6 @@ import { SurveyAnalyticsDatatablesComponent } from "./components/survey.analytic
 import { AnalyticsPage } from "./pages/analytics.page";
 import { AnalyticsTabulatorPage } from "./pages/analytics.tabulator.page";
 
-import { PdfExportPage } from "./pages/pdfexport.page";
 import { SurveyModule } from "survey-angular-ui";
 import { SurveyCreatorModule } from "survey-creator-angular";
 import { GameComponent } from "./pages/game.component";
@@ -28,7 +26,6 @@ import { GameComponent } from "./pages/game.component";
     SurveyAnalyticsTabulatorComponent,
     AnalyticsPage,
     GameComponent,
-    PdfExportPage,
     AnalyticsTabulatorPage,
   ],
   imports: [BrowserModule, HttpClientModule, AppRoutingModule, SurveyModule, SurveyCreatorModule, FormsModule],
