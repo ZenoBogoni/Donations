@@ -13,8 +13,14 @@
   *ngIf="![status.PRE, status.POST, status.LEADERBOARD].includes(state)"
 >
   <div id="view">
-    <canvas id="bg"></canvas>
-    <canvas id="game"></canvas>
+      <canvas id="bg"></canvas>
+      <canvas id="game"></canvas>
+      <small class="position-absolute bottom-0 w-100 text-center mb-5" *ngIf="state !== status.PLAYING">
+        Click to play
+      </small>
+      <div class="rounded-pill position-absolute" id="dragArea">
+        ⮄ Move your finger here ⮆
+    </div>
     <div class="position-fixed top-0 text-center w-100 row left-50">
       <small class="col-12"
         >Match {{ currentMatch }} / {{ TOTAL_MATCHES }}</small
@@ -35,6 +41,7 @@
           width="20"
           style="filter: hue-rotate(45deg) invert(1); mix-blend-mode: lighten"
         />
+        <small *ngIf="life.length <= 2"  class="text-warning d-block" style="font-size: xx-small;">! You are running out of lives !</small>
       </div>
     </div>
   </div>
@@ -122,9 +129,6 @@
             You have completed all {{ TOTAL_MATCHES }} matches. Your final score
             is <strong>{{ totalScore }}</strong
             >.<br />
-            You will be able to see how high you ranked on our leaderboard, but
-            first, we would like to ask you a few last questions
-            post-experiment.
           </p>
         </ng-container>
         <ng-container *ngIf="currentMatch < TOTAL_MATCHES">
@@ -134,11 +138,11 @@
             class="m-auto to-yellow"
           />
           <h3>Donate or keep?</h3>
-          <p>
+<!--           <p>
             <strong>Ops!</strong> You lost all your lives. Your score is worth
             new lives that you can use to continue playing or donate to other
             players.
-          </p>
+          </p> -->
           <h3>
             <img
               src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
@@ -160,10 +164,32 @@
             <span id="xpLife">0</span>
           </h3>
           <hr />
+          <ng-container *ngIf="machineCode[0] === '1'">
+            <p></p>
+            <p class="alert alert-warning p-1 mt-2">
+              <b>
+                <h5>Be recognized as a benefactor</h5>
+                Receiver will know their donator's name and message! These will
+                also be shared in the leaderboard.
+              </b>
+            </p>
+            <input
+              type="text"
+              class="form-control mb-2"
+              [(ngModel)]="donation.name"
+              placeholder="Your name"
+            />
+            <textarea
+              class="form-control"
+              [(ngModel)]="donation.message"
+              placeholder="Your message"
+            ></textarea>
+          </ng-container>
           <p>
             <strong>Donate your score to other players</strong><br />
-            <small>Icons show the lives available for donation</small>
+            Icons show the lives available for donation
           </p>
+
           <img
             *ngFor="let l of donationArray; let idx = index"
             [class.opacity-25]="idx >= donation.amount"
@@ -177,16 +203,17 @@
             "
             class="to-yellow"
           />
+
           <div
             class="numberstyle-qty justify-content-center w-auto m-auto d-flex justify-content-center"
           >
-            <div
-              class="qty-btn qty-rem"
+            <button
+              class="qty-btn qty-rem bg-warning"
               [class.disabled]="donation.amount == 0"
               (click)="donation.amount = max(donation.amount - 1, 0)"
             >
               -
-            </div>
+            </button>
             <input
               class="numberstyle"
               type="number"
@@ -196,22 +223,24 @@
               max="{{ donation.lives - 1 }}"
               value="1"
             />
-            <div
-              class="qty-btn qty-add"
+            <button
+              class="qty-btn qty-add bg-warning"
               [class.disabled]="donation.amount == donation.lives - 1"
               (click)="
                 donation.amount = min(donation.amount + 1, donation.lives - 1)
               "
             >
               +
-            </div>
+            </button>
           </div>
           <p>
-            I will donate <strong>{{ donation.amount }}</strong> lives to
-            other<br />
-            I will keep
-            <strong>{{ donation.lives - donation.amount - 1 }} + 1</strong>
-            lives for myself
+            <small>
+              I will donate <strong>{{ donation.amount }}</strong> lives to
+              other<br />
+              I will keep
+              <strong>{{ donation.lives - donation.amount }}</strong>
+              lives for myself
+            </small>
           </p>
           <!-- <div
             class="numberstyle-qty justify-content-center w-auto m-auto d-flex justify-content-center"
@@ -242,27 +271,6 @@
               +
             </div>
           </div> -->
-          <ng-container *ngIf="machineCode[0] === '1'">
-            <p></p>
-            <p class="alert alert-warning p-1 mt-2">
-              <b>
-                <h5>Be recognized as a benefactor</h5>
-                Receiver will know their donator's name and message! These will
-                also be shared in the leaderboard.
-              </b>
-            </p>
-            <input
-              type="text"
-              class="form-control mb-2"
-              [(ngModel)]="donation.name"
-              placeholder="Your name"
-            />
-            <textarea
-              class="form-control"
-              [(ngModel)]="donation.message"
-              placeholder="Your message"
-            ></textarea>
-          </ng-container>
         </ng-container>
       </div>
       <div class="modal-footer">
@@ -384,82 +392,21 @@
         <div class="col-12 col-md-6">
           <h3>How to Play</h3>
           <hr />
-          <p style="margin-bottom: 0px">
-            Prepare to play <b>2 matches</b> of a simplified version of the
-            classic game <b>Pong</b>. Your goal is to control the
-            <b>yellow paddle</b> and keep the ball in play.<br />
-            <b>Move the paddle: </b>
-          </p>
-          <div class="grid-container">
-            <div>from your <b>computer</b> use</div>
-            <div class="items">
-              <p><kbd>↑</kbd> and <kbd>↓</kbd> ,</p>
-              <p><kbd>W</kbd> and <kbd>S</kbd> ,</p>
-              <p>or your mouse;</p>
-            </div>
-          </div>
-          <p>
-            from your <b>phone</b> use your finger on the touchscreen.<br />
-          </p>
+          <p><b>2 Matches</b>: Play two rounds of a simplified <b>Pong</b> game. Control the <b>yellow paddle</b> to keep the ball in play.</p>
 
-          <p>
-            <b>Lives </b>
-            <img
-              src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
-              width="20"
-              style="filter: hue-rotate(200deg)"
-              alt="Lives Icon"
-            />: Missing the ball costs you a life. Lose all your lives, and the
-            match ends.
-          </p>
-          <p>
-            <b>Points </b>
-            <img
-              src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
-              width="20"
-              style="filter: hue-rotate(200deg)"
-              alt="Points Icon"
-            />: The longer you play, the more points you earn. Your total score
-            is the sum of points across both matches.
-          </p>
+          <p><b>Controls:</b></p>
+          <ul>
+            <li *ngIf="!isMobile()"><b>Computer:</b> Use <kbd>↑</kbd> <kbd>↓</kbd>, <kbd>W</kbd> <kbd>S</kbd>, or your mouse.</li>
+            <li *ngIf="isMobile()"><b>Phone:</b> Drag your finger on the touchscreen.</li>
+          </ul>
 
-          <p>
-            <b>First Match:</b> At the end of the first match, your points will
-            turn into new lives ( 500
-            <img
-              src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
-              width="20"
-              style="filter: hue-rotate(200deg)"
-              alt="Points Icon"
-            />
-            = 1
-            <img
-              src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
-              width="20"
-              style="filter: hue-rotate(200deg)"
-              alt="Lives Icon"
-            />) <br />
-            You can decide whether to keep all the lives for the next match or
-            share some with other players. Since everyone must play 2 matches,
-            you will be able to donate all your lives except one (needed to play
-            the second match). After that, you will eventually receive lives
-            donated by others. These will sum up to the available lives for the
-            second match.
-          </p>
+          <p><b>Lives</b>: Miss the ball, lose a life. Lose all lives, the match ends.</p>
+          <p><b>Points</b>: Earn points as you play. Your total score is the sum of both matches.</p>
 
-          <p>
-            <b>Second Match:</b> Points earned in the second (and last) match
-            will <b>not</b> turn into lives. They will directly contribute to your
-            total score.
-          </p>
-
-          <p>
-            <b>Conclusion:</b> After the second match, your total score
-            determines your ranking on the leaderboard. At the end both your
-            score and your donation will be visible in the leaderboard for
-            everyone.
-          </p>
+          <p><b>First Match:</b> Convert points into lives (500 points = 1 life). You can donate lives with others, or keep them for the second match.</p>
+          <p><b>Second Match:</b> Points add directly to your total score. No lives are converted.</p>
         </div>
+
         <div class="col-12 col-md-6">
           <img
             src="assets/pong_UI.jpg"
@@ -472,7 +419,7 @@
         <button
           type="button"
           class="btn"
-          (click)="state = status.UNDERSTANDING"
+          (click)="state = status.WAITING"
         >
           I understand
         </button>

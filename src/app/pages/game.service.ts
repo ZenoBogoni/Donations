@@ -163,7 +163,7 @@ export class GameService {
       paddle.y = (mouseY * centerScale - realPaddleHeight / 2) * heightScale;
     }
 
-    canvas.addEventListener("touchmove", handleTouchMove, false);
+    document.addEventListener("touchmove", handleTouchMove, false);
     canvas.addEventListener("touchstart", handleTouchMove, false);
     document.addEventListener("mousemove", handleMouseMove, false);
 
@@ -255,8 +255,6 @@ export class GameService {
     ctx.fillStyle = "#000";
     ctx.fillRect(20, (height * 3) / 4 - 10, 260, 60);
     ctx.globalAlpha = 1;
-    ctx.fillStyle = "#fff";
-    ctx.fillText("Click to play", width / 2, (height * 3) / 4);
   }
 }
 
