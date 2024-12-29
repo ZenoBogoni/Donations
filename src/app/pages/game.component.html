@@ -8,7 +8,10 @@
     {{ observers }} observers
   </div>
 </div> -->
-
+<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ -->
 <ng-container
   *ngIf="![status.PRE, status.POST, status.LEADERBOARD].includes(state)"
 >
@@ -18,7 +21,7 @@
       <small class="position-absolute bottom-0 w-100 text-center mb-5" *ngIf="state !== status.PLAYING">
         Click to play
       </small>
-      <div class="rounded-pill position-absolute" id="dragArea">
+      <div *ngIf="isMobile()" class="rounded-pill position-absolute" id="dragArea">
         ⮄ Move your finger here ⮆
     </div>
     <div class="position-fixed top-0 text-center w-100 row left-50">
@@ -126,7 +129,7 @@
           <h3>Game completed</h3>
           <p>
             <strong>Congratulations!</strong><br />
-            You have completed all {{ TOTAL_MATCHES }} matches. Your final score
+            <!-- You have completed all {{ TOTAL_MATCHES }} matches. --> Your final score
             is <strong>{{ totalScore }}</strong
             >.<br />
           </p>
@@ -168,9 +171,9 @@
             <p></p>
             <p class="alert alert-warning p-1 mt-2">
               <b>
-                <h5>Be recognized as a benefactor</h5>
-                Receiver will know their donator's name and message! These will
-                also be shared in the leaderboard.
+               <!--  <h5>Be recognized as a benefactor</h5> -->
+                Receiver will know your name and message! These will
+                also be shared with everyone in the leaderboard.
               </b>
             </p>
             <input
@@ -225,20 +228,20 @@
             />
             <button
               class="qty-btn qty-add bg-warning"
-              [class.disabled]="donation.amount == donation.lives - 1"
+              [class.disabled]="donation.amount === donation.lives - 1"
               (click)="
                 donation.amount = min(donation.amount + 1, donation.lives - 1)
               "
             >
-              +
+            +
             </button>
           </div>
           <p>
             <small>
-              I will donate <strong>{{ donation.amount }}</strong> lives to
+              I will donate <strong class="notranslate m-1">{{ donation.amount }}</strong> lives to
               other<br />
               I will keep
-              <strong>{{ donation.lives - donation.amount }}</strong>
+              <strong class="notranslate m-1">{{donation.lives - donation.amount}} </strong>
               lives for myself
             </small>
           </p>
@@ -289,7 +292,7 @@
   </div>
 </div>
 
-<div
+<!-- <div
   class="modal text-dark"
   tabindex="-1"
   role="dialog"
@@ -318,7 +321,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <div
   class="modal text-dark"
@@ -389,25 +392,47 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="row align-items-center">
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-8">
           <h3>How to Play</h3>
           <hr />
-          <p><b>2 Matches</b>: Play two rounds of a simplified <b>Pong</b> game. Control the <b>yellow paddle</b> to keep the ball in play.</p>
+          <p><b>Pong game</b>: Control the <b>yellow paddle</b> to keep the ball in play.</p>
 
-          <p><b>Controls:</b></p>
-          <ul>
-            <li *ngIf="!isMobile()"><b>Computer:</b> Use <kbd>↑</kbd> <kbd>↓</kbd>, <kbd>W</kbd> <kbd>S</kbd>, or your mouse.</li>
-            <li *ngIf="isMobile()"><b>Phone:</b> Drag your finger on the touchscreen.</li>
-          </ul>
-
-          <p><b>Lives</b>: Miss the ball, lose a life. Lose all lives, the match ends.</p>
-          <p><b>Points</b>: Earn points as you play. Your total score is the sum of both matches.</p>
-
-          <p><b>First Match:</b> Convert points into lives (500 points = 1 life). You can donate lives with others, or keep them for the second match.</p>
-          <p><b>Second Match:</b> Points add directly to your total score. No lives are converted.</p>
+         <!--  <p><b>Controls:</b></p> -->
+          <!-- <ul> -->
+            <p *ngIf="!isMobile()"> Use <kbd>↑</kbd> <kbd>↓</kbd>, <kbd>W</kbd> <kbd>S</kbd>, or your mouse.</p>
+           <p *ngIf="isMobile()"> Drag your finger on the touchscreen.</p>
+          <!-- </ul> -->
+  <h5><b>Icons</b></h5>
+          <p><b>Lives </b><img 
+            src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+            width="20"
+            class="to-yellow"
+          />: If you miss the ball, you lose a life . Lose all lives, the match ends.</p>
+          <p><b>Points </b>  <img
+            src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
+            width="20"
+            class="to-yellow"
+            alt="Points Icon"
+          />: Earn points as you play. Your total score is the sum of points from both matches and will be visble in a leaderboard at the end of the experiment.</p>
+<h5><b>Structure</b></h5>
+<ul class="timeline"> </ul>
+          <li><b>Match 1:</b> Play and convert points into lives (500 <img
+            src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
+            width="20"
+            class="to-yellow"
+            alt="Points Icon"
+          /> = 1 <img
+          src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+          width="20"
+          class="to-yellow"
+        />).</li> 
+        <li><b>Make a donation: </b>You can donate lives to others, or keep them for your second match.</li>
+        <li><b>Receive a donation: </b>You may receive donations from other players.</li>
+          <p><b>Match 2:</b> Play. Points add directly to your total score. No lives are converted.</p>
+          <p><b>Leaderboard:</b> Everyone will see how high yoy ranked with your total score and how many lives you donated.</p>
         </div>
 
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-4">
           <img
             src="assets/pong_UI.jpg"
             alt="Game Preview"

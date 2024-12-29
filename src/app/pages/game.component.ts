@@ -181,7 +181,9 @@ export class GameComponent implements OnInit, AfterViewInit {
       this.machineCode = SurveyService.generateMachineCode();
       localStorage.setItem("machineCode", this.machineCode);
       this.state = State.PRE;
+      alert("qui")
     }
+    alert(this.state)
 
     this.preSurvey = new Model(PreSurvey);
     // Ottiene il dispositivo e il browser dell'utente.
@@ -431,7 +433,7 @@ export class GameComponent implements OnInit, AfterViewInit {
  * @class
  */
 export class State {
-  static GAME_OVER = 0;
+  static GAME_OVER = 10;
   static PLAYING = 1;
   static PAUSED = 2;
   static WAITING = 3;
