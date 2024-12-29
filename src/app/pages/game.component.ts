@@ -141,6 +141,8 @@ export class GameComponent implements OnInit, AfterViewInit {
     q3: 'C',
   };
 
+  tutorialStep = 1;
+
   areAllAnswersCorrect(): boolean {
     return (
       this.answers.q1 === this.correctAnswers.q1 &&
@@ -181,9 +183,7 @@ export class GameComponent implements OnInit, AfterViewInit {
       this.machineCode = SurveyService.generateMachineCode();
       localStorage.setItem("machineCode", this.machineCode);
       this.state = State.PRE;
-      alert("qui")
     }
-    alert(this.state)
 
     this.preSurvey = new Model(PreSurvey);
     // Ottiene il dispositivo e il browser dell'utente.

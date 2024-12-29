@@ -1,28 +1,21 @@
-<!-- <div class="position-fixed top-0 right-0 m-3">
-  <div class="badge badge-pill bg-white rounded-pill text-dark">
-    <img
-      src="https://cdn-icons-gif.flaticon.com/7920/7920923.gif"
-      width="30"
-      class="to-yellow"
-    />
-    {{ observers }} observers
-  </div>
-</div> -->
-<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- -->
 <ng-container
   *ngIf="![status.PRE, status.POST, status.LEADERBOARD].includes(state)"
 >
   <div id="view">
-      <canvas id="bg"></canvas>
-      <canvas id="game"></canvas>
-      <small class="position-absolute bottom-0 w-100 text-center mb-5" *ngIf="state !== status.PLAYING">
-        Click to play
-      </small>
-      <div *ngIf="isMobile()" class="rounded-pill position-absolute" id="dragArea">
-        ⮄ Move your finger here ⮆
+    <canvas id="bg"></canvas>
+    <canvas id="game"></canvas>
+    <small
+      class="position-absolute bottom-0 w-100 text-center mb-5"
+      *ngIf="state !== status.PLAYING"
+    >
+      Click to play
+    </small>
+    <div
+      *ngIf="isMobile()"
+      class="rounded-pill position-absolute"
+      id="dragArea"
+    >
+      ⮄ Move your finger here ⮆
     </div>
     <div class="position-fixed top-0 text-center w-100 row left-50">
       <small class="col-12"
@@ -44,7 +37,12 @@
           width="20"
           style="filter: hue-rotate(45deg) invert(1); mix-blend-mode: lighten"
         />
-        <small *ngIf="life.length <= 2"  class="text-warning d-block" style="font-size: xx-small;">! You are running out of lives !</small>
+        <small
+          *ngIf="life.length <= 2"
+          class="text-warning d-block"
+          style="font-size: xx-small"
+          >! You are running out of lives !</small
+        >
       </div>
     </div>
   </div>
@@ -129,8 +127,8 @@
           <h3>Game completed</h3>
           <p>
             <strong>Congratulations!</strong><br />
-            <!-- You have completed all {{ TOTAL_MATCHES }} matches. --> Your final score
-            is <strong>{{ totalScore }}</strong
+            <!-- You have completed all {{ TOTAL_MATCHES }} matches. -->
+            Your final score is <strong>{{ totalScore }}</strong
             >.<br />
           </p>
         </ng-container>
@@ -141,7 +139,7 @@
             class="m-auto to-yellow"
           />
           <h3>Donate or keep?</h3>
-<!--           <p>
+          <!--           <p>
             <strong>Ops!</strong> You lost all your lives. Your score is worth
             new lives that you can use to continue playing or donate to other
             players.
@@ -171,9 +169,9 @@
             <p></p>
             <p class="alert alert-warning p-1 mt-2">
               <b>
-               <!--  <h5>Be recognized as a benefactor</h5> -->
-                Receiver will know your name and message! These will
-                also be shared with everyone in the leaderboard.
+                <!--  <h5>Be recognized as a benefactor</h5> -->
+                Receiver will know your name and message! These will also be
+                shared with everyone in the leaderboard.
               </b>
             </p>
             <input
@@ -233,15 +231,18 @@
                 donation.amount = min(donation.amount + 1, donation.lives - 1)
               "
             >
-            +
+              +
             </button>
           </div>
           <p>
             <small>
-              I will donate <strong class="notranslate m-1">{{ donation.amount }}</strong> lives to
-              other<br />
+              I will donate
+              <strong class="notranslate m-1">{{ donation.amount }}</strong>
+              lives to other<br />
               I will keep
-              <strong class="notranslate m-1">{{donation.lives - donation.amount}} </strong>
+              <strong class="notranslate m-1"
+                >{{ donation.lives - donation.amount }}
+              </strong>
               lives for myself
             </small>
           </p>
@@ -281,7 +282,9 @@
           type="button"
           class="btn"
           (click)="next()"
-          [disabled]="!(donation.name && donation.message) && machineCode[0] === '1'"
+          [disabled]="
+            !(donation.name && donation.message) && machineCode[0] === '1'
+          "
         >
           {{
             currentMatch >= TOTAL_MATCHES ? "Go to final survey" : "Next match"
@@ -395,59 +398,111 @@
         <div class="col-12 col-md-8">
           <h3>How to Play</h3>
           <hr />
-          <p><b>Pong game</b>: Control the <b>yellow paddle</b> to keep the ball in play.</p>
+          <p>
+            <b>Pong game</b>: Control the <b>yellow paddle</b> to keep the ball
+            in play.
+          </p>
 
-         <!--  <p><b>Controls:</b></p> -->
+          <!--  <p><b>Controls:</b></p> -->
           <!-- <ul> -->
-            <p *ngIf="!isMobile()"> Use <kbd>↑</kbd> <kbd>↓</kbd>, <kbd>W</kbd> <kbd>S</kbd>, or your mouse.</p>
-           <p *ngIf="isMobile()"> Drag your finger on the touchscreen.</p>
+          <p *ngIf="!isMobile()">
+            Use <kbd>↑</kbd> <kbd>↓</kbd>, <kbd>W</kbd> <kbd>S</kbd>, or your
+            mouse.
+          </p>
+          <p *ngIf="isMobile()">Drag your finger on the touchscreen.</p>
           <!-- </ul> -->
-  <h5><b>Icons</b></h5>
-          <p><b>Lives </b><img 
-            src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
-            width="20"
-            class="to-yellow"
-          />: If you miss the ball, you lose a life . Lose all lives, the match ends.</p>
-          <p><b>Points </b>  <img
-            src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
-            width="20"
-            class="to-yellow"
-            alt="Points Icon"
-          />: Earn points as you play. Your total score is the sum of points from both matches and will be visble in a leaderboard at the end of the experiment.</p>
-<h5><b>Structure</b></h5>
-<ul class="timeline"> </ul>
-          <li><b>Match 1:</b> Play and convert points into lives (500 <img
-            src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
-            width="20"
-            class="to-yellow"
-            alt="Points Icon"
-          /> = 1 <img
-          src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
-          width="20"
-          class="to-yellow"
-        />).</li> 
-        <li><b>Make a donation: </b>You can donate lives to others, or keep them for your second match.</li>
-        <li><b>Receive a donation: </b>You may receive donations from other players.</li>
-          <p><b>Match 2:</b> Play. Points add directly to your total score. No lives are converted.</p>
-          <p><b>Leaderboard:</b> Everyone will see how high yoy ranked with your total score and how many lives you donated.</p>
+          <h5><b>Icons</b></h5>
+          <p>
+            <b>Lives </b
+            ><img
+              src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+              width="20"
+              class="to-yellow"
+            />: If you miss the ball, you lose a life . Lose all lives, the
+            match ends.
+          </p>
+          <p>
+            <b>Points </b>
+            <img
+              src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
+              width="20"
+              class="to-yellow"
+              alt="Points Icon"
+            />: Earn points as you play.
+          </p>
+          <h5><b>Structure</b></h5>
+          <div class="row position-relative">
+            <hr
+              class="position-absolute w-75 m-auto"
+              style="z-index: 0; top: 50%; left: 12.5%"
+            />
+            <div
+              class="col-3 text-center"
+              *ngFor="let idx of [1, 2, 3, 4]"
+              style="z-index: 9999"
+            >
+              <div
+                class="badge rounded-circle cursor-pointer"
+                [class.bg-warning]="tutorialStep >= idx"
+                [class.bg-secondary]="tutorialStep < idx"
+                (click)="tutorialStep = idx"
+              >
+                {{ idx }}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="tutorialStep === 1">
+            <b>Match 1:</b> Play and convert points into lives (500
+            <img
+              src="https://cdn-icons-gif.flaticon.com/6455/6455041.gif"
+              width="20"
+              class="to-yellow"
+              alt="Points Icon"
+            />
+            = 1
+            <img
+              src="https://cdn-icons-gif.flaticon.com/14118/14118583.gif"
+              width="20"
+              class="to-yellow"
+            />).
+          </div>
+          <div *ngIf="tutorialStep === 2">
+            <b>Make a donation: </b>You can donate lives to others, or keep them
+            for your second match.
+
+            <b>Receive a donation: </b>You may receive donations from other
+            players.
+          </div>
+          <div *ngIf="tutorialStep === 3">
+            <b>Match 2:</b> Play. Points add directly to your total score. No
+            lives are converted.
+          </div>
+          <div *ngIf="tutorialStep === 4">
+            <b>Leaderboard:</b> Everyone will see how high yoy ranked with your
+            total score and how many lives you donated.
+
+            <hr>
+            <button type="button" class="btn" (click)="state = status.WAITING">
+              I understand
+            </button>
+          </div>
+
+          <div *ngIf="tutorialStep < 4">
+            <hr>
+            <button type="button" class="btn" (click)="tutorialStep = tutorialStep + 1">
+              Next step
+            </button>
+          </div>
         </div>
 
         <div class="col-12 col-md-4">
           <img
-            src="assets/pong_UI.jpg"
+            src="assets/video.gif"
+
             alt="Game Preview"
-            class="w-100 rounded-3"
+            class="w-100 rounded-3 preview"
           />
         </div>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn"
-          (click)="state = status.WAITING"
-        >
-          I understand
-        </button>
       </div>
     </div>
   </div>
@@ -465,101 +520,106 @@
           <div>
             <div>
               <div class="mb-4">
-              <h4> Are you ready to play?</h4>
-              <small>Answer all questions correctly to enable the <b>Play</b> button and start the game.</small>
-            </div>
+                <h4>Are you ready to play?</h4>
+                <small
+                  >Answer all questions correctly to enable the
+                  <b>Play</b> button and start the game.</small
+                >
+              </div>
               <form>
                 <div class="mb-4">
-                <p>1. What happens if you miss the ball during the game?</p>
-                <label>
-                  <input
-                    type="radio"
-                    name="question1"
-                    [value]="'A'"
-                    [(ngModel)]="answers.q1"
-                  />
-                  A. You lose a life. </label
-                ><br />
-                <label>
-                  <input
-                    type="radio"
-                    name="question1"
-                    [value]="'B'"
-                    [(ngModel)]="answers.q1"
-                  />
-                  B. You lose the game immediately. </label
-                ><br />
-                <label>
-                  <input
-                    type="radio"
-                    name="question1"
-                    [value]="'C'"
-                    [(ngModel)]="answers.q1"
-                  />
-                  C. Nothing happens.
-                </label><br />
-              </div>
-              <div class="mb-4">
-                <p>2. How can you earn lives for the next match?</p>
-                <label>
-                  <input
-                    type="radio"
-                    name="question2"
-                    [value]="'A'"
-                    [(ngModel)]="answers.q2"
-                  />
-                  A. By donating lives. </label
-                ><br />
-                <label>
-                  <input
-                    type="radio"
-                    name="question2"
-                    [value]="'B'"
-                    [(ngModel)]="answers.q2"
-                  />
-                  B. By scoring points. </label
-                ><br />
-                <label>
-                  <input
-                    type="radio"
-                    name="question2"
-                    [value]="'C'"
-                    [(ngModel)]="answers.q2"
-                  />
-                  C. By asking another player.
-                </label>
-              </div>
-              <div class="mb-4">
-                <p>
-                  3. What are you allowed to do at the end of the <b>second match</b>?
-                </p>
-                <label>
-                  <input
-                    type="radio"
-                    name="question3"
-                    [value]="'A'"
-                    [(ngModel)]="answers.q3"
-                  />
-                  A. Donate lives to other players. </label
-                ><br />
-                <label>
-                  <input
-                    type="radio"
-                    name="question3"
-                    [value]="'B'"
-                    [(ngModel)]="answers.q3"
-                  />
-                  B. Play again. </label
-                ><br />
-                <label>
-                  <input
-                    type="radio"
-                    name="question3"
-                    [value]="'C'"
-                    [(ngModel)]="answers.q3"
-                  />
-                  C. See the scoreboard. </label
-                ></div>
+                  <p>1. What happens if you miss the ball during the game?</p>
+                  <label>
+                    <input
+                      type="radio"
+                      name="question1"
+                      [value]="'A'"
+                      [(ngModel)]="answers.q1"
+                    />
+                    A. You lose a life. </label
+                  ><br />
+                  <label>
+                    <input
+                      type="radio"
+                      name="question1"
+                      [value]="'B'"
+                      [(ngModel)]="answers.q1"
+                    />
+                    B. You lose the game immediately. </label
+                  ><br />
+                  <label>
+                    <input
+                      type="radio"
+                      name="question1"
+                      [value]="'C'"
+                      [(ngModel)]="answers.q1"
+                    />
+                    C. Nothing happens. </label
+                  ><br />
+                </div>
+                <div class="mb-4">
+                  <p>2. How can you earn lives for the next match?</p>
+                  <label>
+                    <input
+                      type="radio"
+                      name="question2"
+                      [value]="'A'"
+                      [(ngModel)]="answers.q2"
+                    />
+                    A. By donating lives. </label
+                  ><br />
+                  <label>
+                    <input
+                      type="radio"
+                      name="question2"
+                      [value]="'B'"
+                      [(ngModel)]="answers.q2"
+                    />
+                    B. By scoring points. </label
+                  ><br />
+                  <label>
+                    <input
+                      type="radio"
+                      name="question2"
+                      [value]="'C'"
+                      [(ngModel)]="answers.q2"
+                    />
+                    C. By asking another player.
+                  </label>
+                </div>
+                <div class="mb-4">
+                  <p>
+                    3. What are you allowed to do at the end of the
+                    <b>second match</b>?
+                  </p>
+                  <label>
+                    <input
+                      type="radio"
+                      name="question3"
+                      [value]="'A'"
+                      [(ngModel)]="answers.q3"
+                    />
+                    A. Donate lives to other players. </label
+                  ><br />
+                  <label>
+                    <input
+                      type="radio"
+                      name="question3"
+                      [value]="'B'"
+                      [(ngModel)]="answers.q3"
+                    />
+                    B. Play again. </label
+                  ><br />
+                  <label>
+                    <input
+                      type="radio"
+                      name="question3"
+                      [value]="'C'"
+                      [(ngModel)]="answers.q3"
+                    />
+                    C. See the scoreboard.
+                  </label>
+                </div>
               </form>
               <div class="modal-footer">
                 <button
