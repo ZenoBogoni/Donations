@@ -141,6 +141,8 @@ export class GameComponent implements OnInit, AfterViewInit {
     q3: 'C',
   };
 
+  tutorialStep = 1;
+
   areAllAnswersCorrect(): boolean {
     return (
       this.answers.q1 === this.correctAnswers.q1 &&
@@ -431,7 +433,7 @@ export class GameComponent implements OnInit, AfterViewInit {
  * @class
  */
 export class State {
-  static GAME_OVER = 0;
+  static GAME_OVER = 10;
   static PLAYING = 1;
   static PAUSED = 2;
   static WAITING = 3;

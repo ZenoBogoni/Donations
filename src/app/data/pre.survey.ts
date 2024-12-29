@@ -101,7 +101,7 @@ We sincerely thank you for your time and valuable contribution. Should you have 
           title:
             "Please answer the following questions",
             columns: [
-              { value: 1, text: "Definetly not" },
+              { value: 1, text: "Definitely not" },
               { value: 2, text: "Not much" },
               { value: 3, text: "Neutral" },
               { value: 4, text: "Yes" },
