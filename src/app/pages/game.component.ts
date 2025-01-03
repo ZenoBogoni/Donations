@@ -28,6 +28,11 @@ declare var SurveyTheme: any;
   styleUrls: ["./game.component.scss"],
 })
 export class GameComponent implements OnInit, AfterViewInit {
+
+  /**
+   * Flag per confermare la propria tirchieria
+   */
+  keep = false;
   /**
    * Numero di osservatori casuali.
    * @type {number}
@@ -47,7 +52,7 @@ export class GameComponent implements OnInit, AfterViewInit {
    * Numero totale di vite.
    * @type {number}
    */
-  TOTAL_LIVES = 5;
+  TOTAL_LIVES = 1;
   /**
    * Array delle vite.
    * @type {number[]}

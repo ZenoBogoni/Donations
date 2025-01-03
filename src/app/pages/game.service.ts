@@ -173,8 +173,8 @@ export class GameService {
         startGame();
       }
     }; */
-    canvas.onclick = () => {
-      if (!isRunning) {
+    document.onmousedown = () => {
+      if (!isRunning && this.state !== State.TUTORIAL && this.state !== State.GAME_OVER) {
         this.state = State.PLAYING;
         startGame();
       }

@@ -175,17 +175,21 @@
               </b>
             </p>
             <input
+              required
               type="text"
               class="form-control mb-2"
               [(ngModel)]="donation.name"
-              placeholder="Your name"
+              placeholder="Your name *"
             />
             <textarea
+              required
               class="form-control"
               [(ngModel)]="donation.message"
-              placeholder="Your message"
+              placeholder="Your message *"
             ></textarea>
+            <hr>
           </ng-container>
+
           <p>
             <strong>Donate your score to other players</strong><br />
             Icons show the lives available for donation
@@ -210,7 +214,8 @@
           >
             <button
               class="qty-btn qty-rem bg-warning"
-              [class.disabled]="donation.amount == 0"
+              [disabled]="!donation.amount"
+              [class.disabled]="!donation.amount"
               (click)="donation.amount = max(donation.amount - 1, 0)"
             >
               -
@@ -246,6 +251,12 @@
               lives for myself
             </small>
           </p>
+          <div class="form-check d-flex m-auto justify-content-center" style="gap: 1rem" *ngIf="!donation.amount">
+            <input class="form-check-input" type="checkbox" (change)="keep = !keep" id="flexCheckChecked" />
+            <label class="form-check-label font-small ml-2" for="flexCheckChecked">
+              &emsp;I confirm I'll keep all lives for myself *
+            </label>
+          </div>
           <!-- <div
             class="numberstyle-qty justify-content-center w-auto m-auto d-flex justify-content-center"
           >
@@ -282,7 +293,7 @@
           type="button"
           class="btn"
           (click)="next()"
-          [disabled]="
+          [disabled]="(donation.amount === 0 && !keep) ||
             !(donation.name && donation.message) && machineCode[0] === '1'
           "
         >
@@ -396,6 +407,7 @@
     <div class="modal-content">
       <div class="row align-items-center">
         <div class="col-12 col-md-8">
+          <h1><b>PLEASE, READ</b></h1>
           <h3>How to Play</h3>
           <hr />
           <p>
@@ -495,7 +507,7 @@
           </div>
         </div>
 
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-4 example">
           <img
             src="assets/video.gif"
 
